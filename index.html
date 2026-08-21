@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐙 Süsse Monster Quartett</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>🐙 Süsse Monster Quartett</h1>
+    <p>Wähle die stärkste Eigenschaft und besiege den Computer!</p>
+  </header>
+
+  <!-- Punktestand -->
+  <div class="scoreboard">
+    <div class="score-item">
+      <span>Deine Karten</span>
+      <strong id="player-count">—</strong>
+    </div>
+    <div class="score-item">
+      <span>Computer</span>
+      <strong id="computer-count">—</strong>
+    </div>
+  </div>
+
+  <!-- Spielfeld -->
+  <div class="arena">
+    <div class="player-side">
+      <div class="side-label">👤 Du</div>
+      <div id="player-card"></div>
+    </div>
+    <div class="computer-side">
+      <div class="side-label">💻 Computer</div>
+      <div id="computer-card"></div>
+    </div>
+  </div>
+
+  <!-- Ergebnis -->
+  <div class="result-area">
+    <div id="result-message" class="result-message">Lade Spiel…</div>
+    <br />
+    <button id="next-btn" class="btn btn--primary" onclick="nextRound()">
+      Nächste Runde ➜
+    </button>
+  </div>
+
+  <!-- End-Screen -->
+  <div id="end-overlay">
+    <div class="end-box">
+      <h2 id="end-title"></h2>
+      <p id="end-sub"></p>
+      <button class="btn btn--primary" onclick="restartGame()">🔄 Nochmal spielen</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

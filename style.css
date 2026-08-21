@@ -1,0 +1,291 @@
+/* =====================
+   SÜSSE MONSTER QUARTETT
+   style.css
+   ===================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Fredoka+One&display=swap');
+
+/* ── Reset & Basis ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #1a0a2e;
+  --surface:   #2d1b4e;
+  --card-bg:   #3d2464;
+  --accent1:   #ff6eb4;   /* pink */
+  --accent2:   #a78bfa;   /* lila */
+  --accent3:   #34d399;   /* mint */
+  --text:      #f3e8ff;
+  --text-muted:#b89fd8;
+  --win:       #34d399;
+  --lose:      #f87171;
+  --draw:      #fbbf24;
+  --radius:    1.2rem;
+  --shadow:    0 8px 32px rgba(0,0,0,0.4);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, #3d0d6b44 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 90%, #0d3d6b44 0%, transparent 60%);
+}
+
+/* ── Header ── */
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+header h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* ── Scoreboard ── */
+.scoreboard {
+  display: flex;
+  gap: 2rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 0.75rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.score-item { text-align: center; }
+.score-item span { display: block; color: var(--text-muted); font-size: 0.78rem; font-weight: 400; }
+.score-item strong { font-size: 1.6rem; color: var(--accent2); font-family: 'Fredoka One', cursive; }
+
+/* ── Spielfeld ── */
+.arena {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 820px;
+}
+
+.player-side, .computer-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.side-label {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── Karte ── */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  width: 100%;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.card--hidden {
+  background: var(--surface);
+  border: 2px dashed var(--accent2);
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  width: 100%;
+}
+
+.card__back {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.card__back span { font-size: 3rem; }
+.card__back p { margin-top: 0.5rem; font-size: 0.9rem; }
+
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.card__emoji { font-size: 2.5rem; }
+
+.card__name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+/* ── Stats ── */
+.stat-row {
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.6rem;
+  margin-bottom: 0.4rem;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.stat-row--clickable {
+  cursor: pointer;
+}
+
+.stat-row--clickable:hover {
+  background: rgba(167, 139, 250, 0.2);
+  transform: translateX(4px);
+}
+
+.stat-row--chosen { background: rgba(167,139,250,0.25); }
+.stat-row--win    { background: rgba(52, 211, 153, 0.2); }
+.stat-row--lose   { background: rgba(248, 113, 113, 0.2); }
+.stat-row--draw   { background: rgba(251, 191, 36, 0.2); }
+
+.stat-label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.stat-value {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: var(--accent1);
+  float: right;
+  margin-top: -1.4rem;
+}
+
+.stat-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 99px;
+  margin-top: 0.3rem;
+  overflow: hidden;
+  clear: both;
+}
+
+.stat-bar__fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  transition: width 0.6s ease;
+}
+
+/* ── Ergebnis ── */
+.result-area {
+  text-align: center;
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 820px;
+}
+
+.result-message {
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  display: inline-block;
+  margin-bottom: 1rem;
+  transition: all 0.3s;
+}
+
+.result-message--win  { background: rgba(52,211,153,0.2);  color: var(--win);  }
+.result-message--lose { background: rgba(248,113,113,0.2); color: var(--lose); }
+.result-message--draw { background: rgba(251,191,36,0.2);  color: var(--draw); }
+
+/* ── Buttons ── */
+.btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  padding: 0.7rem 2rem;
+  border: none;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+}
+
+.btn--secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--accent2);
+}
+
+#next-btn { display: none; margin-top: 0.5rem; }
+
+/* ── End Overlay ── */
+#end-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 20, 0.85);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.end-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 2.5rem 3rem;
+  text-align: center;
+  border: 2px solid var(--accent2);
+  box-shadow: 0 0 60px rgba(167,139,250,0.3);
+}
+
+.end-box h2 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.end-box p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .arena { grid-template-columns: 1fr; }
+  .computer-side { order: -1; }
+  .scoreboard { gap: 1rem; padding: 0.6rem 1rem; }
+}

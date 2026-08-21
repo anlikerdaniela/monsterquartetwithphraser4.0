@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "name": "Fluffmunch",
+    "emoji": "🐙",
+    "bild": "fluffmunch.png",
+    "eigenschaften": {
+      "niedlichkeit": 95,
+      "staerke": 30,
+      "geschwindigkeit": 50,
+      "magie": 80,
+      "hunger": 70
+    }
+  },
+  {
+    "id": 2,
+    "name": "Bubblewump",
+    "emoji": "🫧",
+    "bild": "bubblewump.png",
+    "eigenschaften": {
+      "niedlichkeit": 85,
+      "staerke": 20,
+      "geschwindigkeit": 90,
+      "magie": 60,
+      "hunger": 40
+    }
+  },
+  {
+    "id": 3,
+    "name": "Snorkelblob",
+    "emoji": "🦕",
+    "bild": "snorkelblob.png",
+    "eigenschaften": {
+      "niedlichkeit": 70,
+      "staerke": 75,
+      "geschwindigkeit": 25,
+      "magie": 50,
+      "hunger": 90
+    }
+  },
+  {
+    "id": 4,
+    "name": "Glimmerzap",
+    "emoji": "✨",
+    "bild": "glimmerzap.png",
+    "eigenschaften": {
+      "niedlichkeit": 60,
+      "staerke": 50,
+      "geschwindigkeit": 70,
+      "magie": 99,
+      "hunger": 30
+    }
+  },
+  {
+    "id": 5,
+    "name": "Wobblegloop",
+    "emoji": "🍮",
+    "bild": "wobblegloop.png",
+    "eigenschaften": {
+      "niedlichkeit": 90,
+      "staerke": 40,
+      "geschwindigkeit": 35,
+      "magie": 45,
+      "hunger": 95
+    }
+  },
+  {
+    "id": 6,
+    "name": "Spikelump",
+    "emoji": "🦔",
+    "bild": "spikelump.png",
+    "eigenschaften": {
+      "niedlichkeit": 75,
+      "staerke": 85,
+      "geschwindigkeit": 60,
+      "magie": 30,
+      "hunger": 55
+    }
+  },
+  {
+    "id": 7,
+    "name": "Twinklepuff",
+    "emoji": "🌟",
+    "bild": "twinklepuff.png",
+    "eigenschaften": {
+      "niedlichkeit": 99,
+      "staerke": 15,
+      "geschwindigkeit": 80,
+      "magie": 75,
+      "hunger": 25
+    }
+  },
+  {
+    "id": 8,
+    "name": "Grumblesnout",
+    "emoji": "🐗",
+    "bild": "grumblesnout.png",
+    "eigenschaften": {
+      "niedlichkeit": 40,
+      "staerke": 95,
+      "geschwindigkeit": 45,
+      "magie": 20,
+      "hunger": 85
+    }
+  },
+  {
+    "id": 9,
+    "name": "Cuddlezorp",
+    "emoji": "🐨",
+    "bild": "cuddlezorp.png",
+    "eigenschaften": {
+      "niedlichkeit": 88,
+      "staerke": 35,
+      "geschwindigkeit": 40,
+      "magie": 55,
+      "hunger": 65
+    }
+  },
+  {
+    "id": 10,
+    "name": "Fizzlebean",
+    "emoji": "🫘",
+    "bild": "fizzlebean.png",
+    "eigenschaften": {
+      "niedlichkeit": 65,
+      "staerke": 60,
+      "geschwindigkeit": 85,
+      "magie": 40,
+      "hunger": 50
+    }
+  },
+  {
+    "id": 11,
+    "name": "Ploppywink",
+    "emoji": "🐸",
+    "bild": "ploppywink.png",
+    "eigenschaften": {
+      "niedlichkeit": 80,
+      "staerke": 45,
+      "geschwindigkeit": 65,
+      "magie": 70,
+      "hunger": 60
+    }
+  },
+  {
+    "id": 12,
+    "name": "Squishblop",
+    "emoji": "🪼",
+    "bild": "squishblop.png",
+    "eigenschaften": {
+      "niedlichkeit": 92,
+      "staerke": 10,
+      "geschwindigkeit": 55,
+      "magie": 88,
+      "hunger": 45
+    }
+  }
+]
