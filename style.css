@@ -366,3 +366,34 @@ header p {
   0%   { d: path("M0,60 C180,10 360,110 540,60 C720,10 900,110 1080,60 C1260,10 1380,80 1440,60"); }
   100% { d: path("M0,40 C150,90 350,20 540,70 C730,120 920,20 1080,70 C1240,120 1380,40 1440,50"); }
 }
+
+
+/* ── Kartenrückseite ── */
+.card__back-monster {
+  font-size: 4rem;
+  animation: wobble 2s ease-in-out infinite;
+}
+
+.card__back-stars {
+  font-size: 1rem;
+  margin: 0.3rem 0;
+  opacity: 0.7;
+}
+
+.card__back-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: var(--accent1);
+  margin: 0.4rem 0 0.2rem;
+}
+
+.card__back-sub {
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 4px;
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  50%       { transform: rotate(5deg) scale(1.1); }
+}

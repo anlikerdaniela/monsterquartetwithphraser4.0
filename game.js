@@ -70,12 +70,15 @@ function renderComputerCard(hidden = false) {
   const container = document.getElementById("computer-card");
   if (hidden) {
     container.innerHTML = `
+
       <div class="card card--hidden">
-        <div class="card__back">
-          <span>🎴</span>
-          <p>Monster verborgen</p>
-        </div>
-      </div>`;
+    <div class="card__back">
+      <div class="card__back-monster">🐙</div>
+      <div class="card__back-stars">✨ ⭐ ✨</div>
+      <h3 class="card__back-title">Monster Quartet</h3>
+      <p class="card__back-sub">???</p>
+    </div>
+  </div>`;
   } else {
     container.innerHTML = buildCardHTML(computerCard, false);
   }
