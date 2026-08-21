@@ -76,7 +76,7 @@ function renderComputerCard(hidden = false) {
       <div class="card__back-monster">🐙</div>
       <div class="card__back-stars">✨ ⭐ ✨</div>
       <h3 class="card__back-title">Monster Quartet</h3>
-      <p class="card__back-sub">???</p>
+     
     </div>
   </div>`;
   } else {
