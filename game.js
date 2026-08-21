@@ -10,12 +10,13 @@ let playerCard = null;
 let computerCard = null;
 let roundActive = false;
 
+
 const eigenschaftLabels = {
-  sweetness: "💖 sweetness",
-  strength: "💪 strength",
-  speed: "⚡ speed",
-  magic: "✨ magic",
-  hunger: "🍪 hunger"
+  niedlichkeit: "💖 Sweetness",
+  staerke: "💪 Strength",
+  geschwindigkeit: "⚡ Speed",
+  magie: "✨ Magic",
+  hunger: "🍪 Hunger"
 };
 
 // ── Laden & Starten ──────────────────────────────────────────
