@@ -328,3 +328,41 @@ header p {
 .bubble:nth-child(8)  { width: 100px; height: 100px; left: 85%;  animation-duration: 13s; animation-delay: 0s; }
 .bubble:nth-child(9)  { width: 45px;  height: 45px;  left: 92%;  animation-duration: 9s;  animation-delay: 6s; }
 .bubble:nth-child(10) { width: 70px;  height: 70px;  left: 33%;  animation-duration: 14s; animation-delay: 3s; }
+
+
+/* ── Wellenlinien ── */
+.wavy-lines {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 120px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wavy-lines svg {
+  width: 100%;
+  height: 100%;
+}
+
+.wave {
+  fill: none;
+  stroke-width: 1.5;
+  opacity: 0.4;
+}
+
+.wave1 {
+  stroke: #ff6eb4;
+  animation: wavemove 6s ease-in-out infinite alternate;
+}
+
+.wave2 {
+  stroke: #a78bfa;
+  animation: wavemove 8s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes wavemove {
+  0%   { d: path("M0,60 C180,10 360,110 540,60 C720,10 900,110 1080,60 C1260,10 1380,80 1440,60"); }
+  100% { d: path("M0,40 C150,90 350,20 540,70 C730,120 920,20 1080,70 C1240,120 1380,40 1440,50"); }
+}
