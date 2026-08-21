@@ -299,7 +299,7 @@ header p {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   overflow: hidden;
 }
 
@@ -338,7 +338,7 @@ header p {
   left: 0;
   height: 120px;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
 }
 
 .wavy-lines svg {
