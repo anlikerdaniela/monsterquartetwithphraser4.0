@@ -11,11 +11,11 @@ let computerCard = null;
 let roundActive = false;
 
 const eigenschaftLabels = {
-  niedlichkeit: "💖 Niedlichkeit",
-  staerke: "💪 Stärke",
-  geschwindigkeit: "⚡ Geschwindigkeit",
-  magie: "✨ Magie",
-  hunger: "🍪 Hunger"
+  sweetness: "💖 sweetness",
+  strength: "💪 strength",
+  speed: "⚡ speed",
+  magic: "✨ magic",
+  hunger: "🍪 hunger"
 };
 
 // ── Laden & Starten ──────────────────────────────────────────
@@ -53,7 +53,7 @@ function nextRound() {
   renderComputerCard(true); // versteckt
   updateScores();
 
-  document.getElementById("result-message").textContent = "Wähle eine Eigenschaft!";
+  document.getElementById("result-message").textContent = "Choose a property!";
   document.getElementById("result-message").className = "result-message";
   document.getElementById("next-btn").style.display = "none";
 }
@@ -120,7 +120,7 @@ function chooseEigenschaft(key) {
   const msgEl = document.getElementById("result-message");
 
   if (playerVal > computerVal) {
-    msgEl.textContent = `🎉 Du gewinnst! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
+    msgEl.textContent = `🎉 you win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
     msgEl.className = "result-message result-message--win";
     playerDeck.push(playerDeck.shift());
     playerDeck.push(computerDeck.shift());
@@ -162,10 +162,10 @@ function updateScores() {
 function endGame() {
   const isWin = playerDeck.length > 0;
   const overlay = document.getElementById("end-overlay");
-  document.getElementById("end-title").textContent = isWin ? "🏆 Du hast gewonnen!" : "💻 Computer gewinnt!";
+  document.getElementById("end-title").textContent = isWin ? "🏆 Du hast gewonnen!" : "💻 computer wins!";
   document.getElementById("end-sub").textContent = isWin
-    ? "Alle Monster gehören dir!"
-    : "Keine Monster mehr. Versuch es nochmal!";
+    ? "all monsters are yours!"
+    : "No monsters anymore. Try again!";
   overlay.style.display = "flex";
 }
 

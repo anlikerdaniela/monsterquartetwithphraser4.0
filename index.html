@@ -11,17 +11,17 @@
   <!-- Header -->
   <header>
     <h1>🐙 sweet monster quartet</h1>
-    <p>Wähle die stärkste Eigenschaft und besiege den Computer!</p>
+    <p>Choose your strongest ability and defeat the computer!</p>
   </header>
 
   <!-- Punktestand -->
   <div class="scoreboard">
     <div class="score-item">
-      <span>Deine Karten</span>
+      <span>your cards</span>
       <strong id="player-count">—</strong>
     </div>
     <div class="score-item">
-      <span>Computer</span>
+      <span>computer</span>
       <strong id="computer-count">—</strong>
     </div>
   </div>
@@ -29,21 +29,21 @@
   <!-- Spielfeld -->
   <div class="arena">
     <div class="player-side">
-      <div class="side-label">👤 Du</div>
+      <div class="side-label">👤 you</div>
       <div id="player-card"></div>
     </div>
     <div class="computer-side">
-      <div class="side-label">💻 Computer</div>
+      <div class="side-label">💻 computer</div>
       <div id="computer-card"></div>
     </div>
   </div>
 
   <!-- Ergebnis -->
   <div class="result-area">
-    <div id="result-message" class="result-message">Lade Spiel…</div>
+    <div id="result-message" class="result-message">load game...</div>
     <br />
     <button id="next-btn" class="btn btn--primary" onclick="nextRound()">
-      Nächste Runde ➜
+      next round ➜
     </button>
   </div>
 
@@ -52,7 +52,7 @@
     <div class="end-box">
       <h2 id="end-title"></h2>
       <p id="end-sub"></p>
-      <button class="btn btn--primary" onclick="restartGame()">🔄 Nochmal spielen</button>
+      <button class="btn btn--primary" onclick="restartGame()">🔄 play again</button>
     </div>
   </div>
 
