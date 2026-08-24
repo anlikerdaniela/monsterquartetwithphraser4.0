@@ -9,22 +9,41 @@
 <body>
 
   <!-- Header -->
-  <header>
-    <h1>🐙 sweet monster quartet</h1>
-    <div class="wavy-lines">
-      
-      <svg viewBox="0 0 3000 120" preserveAspectRatio="none">
-        <path class="wave wave1" d="M0,60 C375,10 750,110 1125,60 C1500,10 1875,110 2250,60 C2625,10 2850,80 3000,60"/>
-        <path class="wave wave2" d="M0,80 C400,20 800,120 1200,70 C1600,20 2000,100 2400,60 C2700,30 2900,90 3000,80"/>
-      </svg>
+<header>
+  <div class="avatar-wrapper" onclick="toggleAvatarMenu()">
+    <div class="avatar" id="current-avatar">🧚‍♀️</div>
+    <div class="avatar-menu" id="avatar-menu">
+      <p class="avatar-menu-title">Choose your avatar</p>
+      <div class="avatar-options">
+        <span onclick="selectAvatar('🧚')">🧚</span>
+        <span onclick="selectAvatar('🧚‍♀️')">🧚‍♀️</span>
+        <span onclick="selectAvatar('🧚‍♂️')">🧚‍♂️</span>
+        <span onclick="selectAvatar('👩')">👩</span>
+        <span onclick="selectAvatar('👨')">👨</span>
+        <span onclick="selectAvatar('👧')">👧</span>
+        <span onclick="selectAvatar('👦')">👦</span>
+        <span onclick="selectAvatar('👩‍🦰')">👩‍🦰</span>
+        <span onclick="selectAvatar('👩‍🦱')">👩‍🦱</span>
+        <span onclick="selectAvatar('👩‍🦳')">👩‍🦳</span>
+        <span onclick="selectAvatar('🧙‍♀️')">🧙‍♀️</span>
+        <span onclick="selectAvatar('🦸‍♀️')">🦸‍♀️</span>
+      </div>
     </div>
-    <p>Choose your strongest ability and defeat the computer!</p>
-    <div class="lives">       
-      <span class="life">🥚</span>
-      <span class="life">🥚</span>
-      <span class="life">🥚</span>
-    </div>                   
-  </header>
+  </div>
+  <h1>🐙 sweet monster quartet</h1>
+  <div class="wavy-lines">
+    <svg viewBox="0 0 3000 120" preserveAspectRatio="none">
+      <path class="wave wave1" d="M0,60 C375,10 750,110 1125,60 C1500,10 1875,110 2250,60 C2625,10 2850,80 3000,60"/>
+      <path class="wave wave2" d="M0,80 C400,20 800,120 1200,70 C1600,20 2000,100 2400,60 C2700,30 2900,90 3000,80"/>
+    </svg>
+  </div>
+  <p>Choose your strongest ability and defeat the computer!</p>
+  <div class="lives">
+    <span class="life">🥚</span>
+    <span class="life">🥚</span>
+    <span class="life">🥚</span>
+  </div>
+</header>
 
   <!-- Punktestand -->
   <div class="scoreboard">

@@ -200,6 +200,16 @@ function restartGame() {
   startGame();
 }
 
+function toggleAvatarMenu() {
+  document.getElementById("avatar-menu").classList.toggle("open");
+}
+
+function selectAvatar(emoji) {
+  document.getElementById("current-avatar").textContent = emoji;
+  document.getElementById("avatar-menu").classList.remove("open");
+}
+
+
 // ── Start ────────────────────────────────────────────────────
 
 window.addEventListener("DOMContentLoaded", loadMonsters);
