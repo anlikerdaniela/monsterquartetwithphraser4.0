@@ -188,10 +188,17 @@ function updateScores() {
 function endGame() {
   const isWin = playerDeck.length > 0;
   const overlay = document.getElementById("end-overlay");
-  document.getElementById("end-title").textContent = isWin ? "🏆 You won!" : "💻 Computer wins!";
-  document.getElementById("end-sub").textContent = isWin
-    ? "All monsters are yours!"
-    : "No monsters left. Try again!";
+
+  if (isWin) {
+    totalMoney += 100;
+    document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+    document.getElementById("end-title").textContent = "🏆 You won!";
+    document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
+  } else {
+    document.getElementById("end-title").textContent = "💻 Computer wins!";
+    document.getElementById("end-sub").textContent = "No monsters left. Try again!";
+  }
+
   overlay.style.display = "flex";
 }
 

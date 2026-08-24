@@ -460,3 +460,26 @@ header p {
   background: rgba(167,139,250,0.2);
   transform: scale(1.2);
 }
+
+/* ── Wallet ── */
+.wallet {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--surface);
+  border: 2px solid var(--accent2);
+  border-radius: 99px;
+  padding: 0.3rem 0.8rem;
+  font-family: 'Fredoka One', cursive;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  margin-left: 5rem;
+}
+
+.wallet-coin { font-size: 1.4rem; }
+
+.wallet-amount {
+  font-size: 1.1rem;
+  color: var(--accent3);
+}
