@@ -9,7 +9,7 @@ let computerDeck = [];
 let playerCard = null;
 let computerCard = null;
 let roundActive = false;
-
+let isPlayerTurn = true;
 
 const eigenschaftLabels = {
   niedlichkeit: "💖 Sweetness",
@@ -32,7 +32,7 @@ function startGame() {
   const half = Math.floor(shuffled.length / 2);
   playerDeck = shuffled.slice(0, half);
   computerDeck = shuffled.slice(half);
-
+  isPlayerTurn = true;
   updateScores();
   nextRound();
 }
@@ -51,12 +51,21 @@ function nextRound() {
   computerCard = computerDeck[0];
 
   renderPlayerCard();
-  renderComputerCard(true); // versteckt
+  renderComputerCard(true);
   updateScores();
 
-  document.getElementById("result-message").textContent = "Choose a property!";
-  document.getElementById("result-message").className = "result-message";
   document.getElementById("next-btn").style.display = "none";
+
+  if (isPlayerTurn) {
+    document.getElementById("result-message").textContent = "Choose a property!";
+    document.getElementById("result-message").className = "result-message";
+    enablePlayerClick(true);
+  } else {
+    document.getElementById("result-message").textContent = "💻 Computer is choosing...";
+    document.getElementById("result-message").className = "result-message";
+    enablePlayerClick(false);
+    setTimeout(computerChoose, 1500);
+  }
 }
 
 // ── Karten rendern ───────────────────────────────────────────
@@ -70,15 +79,13 @@ function renderComputerCard(hidden = false) {
   const container = document.getElementById("computer-card");
   if (hidden) {
     container.innerHTML = `
-
       <div class="card card--hidden">
-    <div class="card__back">
-      <div class="card__back-monster">🐙</div>
-      <div class="card__back-stars">✨ ⭐ ✨</div>
-      <h3 class="card__back-title">Monster Quartet</h3>
-     
-    </div>
-  </div>`;
+        <div class="card__back">
+          <div class="card__back-monster">🐙</div>
+          <div class="card__back-stars">✨ ⭐ ✨</div>
+          <h3 class="card__back-title">Monster Quartet</h3>
+        </div>
+      </div>`;
   } else {
     container.innerHTML = buildCardHTML(computerCard, false);
   }
@@ -106,6 +113,23 @@ function buildCardHTML(monster, isPlayer) {
     </div>`;
 }
 
+// ── Computer wählt ───────────────────────────────────────────
+
+function enablePlayerClick(enabled) {
+  document.querySelectorAll(".stat-row--clickable").forEach(row => {
+    row.style.pointerEvents = enabled ? "auto" : "none";
+    row.style.opacity = enabled ? "1" : "0.5";
+  });
+}
+
+function computerChoose() {
+  const keys = Object.keys(computerCard.eigenschaften);
+  const bestKey = keys.reduce((a, b) =>
+    computerCard.eigenschaften[a] > computerCard.eigenschaften[b] ? a : b
+  );
+  chooseEigenschaft(bestKey);
+}
+
 // ── Spiellogik ───────────────────────────────────────────────
 
 function chooseEigenschaft(key) {
@@ -115,31 +139,29 @@ function chooseEigenschaft(key) {
   const playerVal = playerCard.eigenschaften[key];
   const computerVal = computerCard.eigenschaften[key];
 
-  // Computerkarte aufdecken
   renderComputerCard(false);
-
-  // Gewählte Eigenschaft highlighten
   highlightStat(key, playerVal, computerVal);
 
   const msgEl = document.getElementById("result-message");
 
   if (playerVal > computerVal) {
-    msgEl.textContent = `🎉 you win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
+    msgEl.textContent = `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
     msgEl.className = "result-message result-message--win";
     playerDeck.push(playerDeck.shift());
     playerDeck.push(computerDeck.shift());
   } else if (computerVal > playerVal) {
-    msgEl.textContent = `😢 Computer gewinnt! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`;
+    msgEl.textContent = `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`;
     msgEl.className = "result-message result-message--lose";
     computerDeck.push(computerDeck.shift());
     computerDeck.push(playerDeck.shift());
   } else {
-    msgEl.textContent = `🤝 Unentschieden! Beide haben ${playerVal}`;
+    msgEl.textContent = `🤝 Draw! Both have ${playerVal}`;
     msgEl.className = "result-message result-message--draw";
     playerDeck.push(playerDeck.shift());
     computerDeck.push(computerDeck.shift());
   }
 
+  isPlayerTurn = !isPlayerTurn;
   updateScores();
   document.getElementById("next-btn").style.display = "inline-block";
 }
@@ -166,10 +188,10 @@ function updateScores() {
 function endGame() {
   const isWin = playerDeck.length > 0;
   const overlay = document.getElementById("end-overlay");
-  document.getElementById("end-title").textContent = isWin ? "🏆 Du hast gewonnen!" : "💻 computer wins!";
+  document.getElementById("end-title").textContent = isWin ? "🏆 You won!" : "💻 Computer wins!";
   document.getElementById("end-sub").textContent = isWin
-    ? "all monsters are yours!"
-    : "No monsters anymore. Try again!";
+    ? "All monsters are yours!"
+    : "No monsters left. Try again!";
   overlay.style.display = "flex";
 }
 
