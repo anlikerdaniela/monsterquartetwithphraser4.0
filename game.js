@@ -7,6 +7,9 @@ let playerCard = null;
 let computerCard = null;
 let roundActive = false;
 let isPlayerTurn = true;
+let lives = 3;
+let totalMoney = 0;
+let gameMode = 'ai';
 
 const eigenschaftLabels = {
   niedlichkeit: "💖 Sweetness",
@@ -18,10 +21,15 @@ const eigenschaftLabels = {
 
 // ── Laden & Starten ──────────────────────────────────────────
 
+function startMode(mode) {
+  gameMode = mode;
+  document.getElementById("start-screen").style.display = "none";
+  startGame();
+}
+
 async function loadMonsters() {
   const res = await fetch("monsters.json");
   allMonsters = await res.json();
-  startGame();
 }
 
 function startGame() {
@@ -30,7 +38,23 @@ function startGame() {
   playerDeck = shuffled.slice(0, half);
   computerDeck = shuffled.slice(half);
   isPlayerTurn = true;
+  lives = 3;
+  updateLives();
   updateScores();
+
+  // Labels anpassen je nach Modus
+  if (gameMode === 'pvp') {
+    document.querySelector(".player-side .side-label").textContent = "👤 Player 1";
+    document.querySelector(".computer-side .side-label").textContent = "👤 Player 2";
+    document.querySelector(".scoreboard .score-item:first-child span").textContent = "Player 1";
+    document.querySelector(".scoreboard .score-item:last-child span").textContent = "Player 2";
+  } else {
+    document.querySelector(".player-side .side-label").textContent = "👤 you";
+    document.querySelector(".computer-side .side-label").textContent = "💻 computer";
+    document.querySelector(".scoreboard .score-item:first-child span").textContent = "your cards";
+    document.querySelector(".scoreboard .score-item:last-child span").textContent = "computer";
+  }
+
   nextRound();
 }
 
@@ -47,34 +71,73 @@ function nextRound() {
   playerCard = playerDeck[0];
   computerCard = computerDeck[0];
 
-  renderPlayerCard();
-  renderComputerCard(true);
   updateScores();
-
   document.getElementById("next-btn").style.display = "none";
 
-  if (isPlayerTurn) {
-    document.getElementById("result-message").textContent = "Choose a property!";
+  if (gameMode === 'pvp') {
+    if (isPlayerTurn) {
+      // Player 1 ist dran — linke Karte sichtbar, rechte versteckt
+      renderPlayerCard(true);
+      renderComputerCard(true);
+      document.getElementById("result-message").textContent = "👤 Player 1 — Choose a property!";
+    } else {
+      // Player 2 ist dran — rechte Karte sichtbar, linke versteckt
+      renderPlayerCard(false);
+      renderComputerCard(false);
+      document.getElementById("result-message").textContent = "👤 Player 2 — Choose a property!";
+    }
     document.getElementById("result-message").className = "result-message";
-    enablePlayerClick(true);
+    enablePlayerClick(true, isPlayerTurn);
   } else {
-    document.getElementById("result-message").textContent = "💻 Computer is choosing...";
-    document.getElementById("result-message").className = "result-message";
-    enablePlayerClick(false);
-    setTimeout(computerChoose, 1500);
+    renderPlayerCard(true);
+    renderComputerCard(true);
+    if (isPlayerTurn) {
+      document.getElementById("result-message").textContent = "Choose a property!";
+      document.getElementById("result-message").className = "result-message";
+      enablePlayerClick(true, true);
+    } else {
+      document.getElementById("result-message").textContent = "💻 Computer is choosing...";
+      document.getElementById("result-message").className = "result-message";
+      enablePlayerClick(false, false);
+      setTimeout(computerChoose, 1500);
+    }
   }
 }
 
 // ── Karten rendern ───────────────────────────────────────────
 
-function renderPlayerCard() {
+function renderPlayerCard(clickable) {
   const container = document.getElementById("player-card");
-  container.innerHTML = buildCardHTML(playerCard, true);
+  if (gameMode === 'pvp' && !isPlayerTurn) {
+    container.innerHTML = `
+      <div class="card card--hidden">
+        <div class="card__back">
+          <div class="card__back-monster">🐙</div>
+          <div class="card__back-stars">✨ ⭐ ✨</div>
+          <h3 class="card__back-title">Monster Quartet</h3>
+        </div>
+      </div>`;
+  } else {
+    container.innerHTML = buildCardHTML(playerCard, clickable && isPlayerTurn);
+  }
 }
 
 function renderComputerCard(hidden = false) {
   const container = document.getElementById("computer-card");
-  if (hidden) {
+  if (gameMode === 'pvp' && isPlayerTurn) {
+    // Player 1 dran → rechte Karte versteckt
+    container.innerHTML = `
+      <div class="card card--hidden">
+        <div class="card__back">
+          <div class="card__back-monster">🐙</div>
+          <div class="card__back-stars">✨ ⭐ ✨</div>
+          <h3 class="card__back-title">Monster Quartet</h3>
+        </div>
+      </div>`;
+  } else if (gameMode === 'pvp' && !isPlayerTurn) {
+    // Player 2 dran → rechte Karte klickbar
+    container.innerHTML = buildCardHTML(computerCard, true, true);
+  } else if (hidden) {
     container.innerHTML = `
       <div class="card card--hidden">
         <div class="card__back">
@@ -88,11 +151,11 @@ function renderComputerCard(hidden = false) {
   }
 }
 
-function buildCardHTML(monster, isPlayer) {
+function buildCardHTML(monster, isClickable, isRight = false) {
   const rows = Object.entries(monster.eigenschaften)
     .map(([key, val]) => `
-      <div class="stat-row ${isPlayer ? "stat-row--clickable" : ""}" 
-           ${isPlayer ? `onclick="chooseEigenschaft('${key}')"` : ""}
+      <div class="stat-row ${isClickable ? "stat-row--clickable" : ""}" 
+           ${isClickable ? `onclick="chooseEigenschaft('${key}')"` : ""}
            data-key="${key}">
         <span class="stat-label">${eigenschaftLabels[key]}</span>
         <span class="stat-value">${val}</span>
@@ -110,10 +173,10 @@ function buildCardHTML(monster, isPlayer) {
     </div>`;
 }
 
-// ── Computer wählt ───────────────────────────────────────────
+// ── Computer / Klick ─────────────────────────────────────────
 
-function enablePlayerClick(enabled) {
-  document.querySelectorAll(".stat-row--clickable").forEach(row => {
+function enablePlayerClick(enabled, leftSide) {
+  document.querySelectorAll("#player-card .stat-row--clickable, #computer-card .stat-row--clickable").forEach(row => {
     row.style.pointerEvents = enabled ? "auto" : "none";
     row.style.opacity = enabled ? "1" : "0.5";
   });
@@ -136,32 +199,62 @@ function chooseEigenschaft(key) {
   const playerVal = playerCard.eigenschaften[key];
   const computerVal = computerCard.eigenschaften[key];
 
-  renderComputerCard(false);
+  // Beide Karten aufdecken
+  document.getElementById("player-card").innerHTML = buildCardHTML(playerCard, false);
+  document.getElementById("computer-card").innerHTML = buildCardHTML(computerCard, false);
+
   highlightStat(key, playerVal, computerVal);
 
   const msgEl = document.getElementById("result-message");
 
+  playerDeck.shift();
+  computerDeck.shift();
+
   if (playerVal > computerVal) {
-    msgEl.textContent = `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
+    msgEl.textContent = gameMode === 'pvp'
+      ? `🎉 Player 1 wins! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`
+      : `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
     msgEl.className = "result-message result-message--win";
-    playerDeck.push(playerDeck.shift());
-    playerDeck.push(computerDeck.shift());
+    playerDeck.push(playerCard);
+    playerDeck.push(computerCard);
   } else if (computerVal > playerVal) {
-    msgEl.textContent = `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`;
+    msgEl.textContent = gameMode === 'pvp'
+      ? `🎉 Player 2 wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`
+      : `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`;
     msgEl.className = "result-message result-message--lose";
-    computerDeck.push(computerDeck.shift());
-    computerDeck.push(playerDeck.shift());
+    computerDeck.push(computerCard);
+    computerDeck.push(playerCard);
   } else {
     msgEl.textContent = `🤝 Draw! Both have ${playerVal}`;
     msgEl.className = "result-message result-message--draw";
-    playerDeck.push(playerDeck.shift());
-    computerDeck.push(computerDeck.shift());
+    playerDeck.push(playerCard);
+    computerDeck.push(computerCard);
   }
 
   isPlayerTurn = !isPlayerTurn;
   updateScores();
+
+  // Leben verlieren wenn keine Karten (nur AI)
+  if (gameMode === 'ai' && playerDeck.length === 0) {
+    lives--;
+    updateLives();
+    if (lives <= 0) { setTimeout(endGame, 800); return; }
+    const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
+    const half = Math.floor(shuffled.length / 2);
+    playerDeck = shuffled.slice(0, half);
+    computerDeck = shuffled.slice(half);
+    msgEl.textContent = `💔 Life lost! ${lives} lives remaining.`;
+  }
+
+  if (computerDeck.length === 0 || playerDeck.length === 0) {
+    setTimeout(endGame, 800);
+    return;
+  }
+
   document.getElementById("next-btn").style.display = "inline-block";
 }
+
+// ── Highlight ────────────────────────────────────────────────
 
 function highlightStat(key, playerVal, computerVal) {
   document.querySelectorAll("#player-card .stat-row").forEach(row => {
@@ -182,18 +275,31 @@ function updateScores() {
   document.getElementById("computer-count").textContent = computerDeck.length;
 }
 
+function updateLives() {
+  const lifeEls = document.querySelectorAll(".life");
+  lifeEls.forEach((el, i) => {
+    el.classList.toggle("life--lost", i >= lives);
+  });
+}
+
 function endGame() {
-  const isWin = playerDeck.length > 0;
   const overlay = document.getElementById("end-overlay");
 
-  if (isWin) {
-    totalMoney += 100;
-    document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
-    document.getElementById("end-title").textContent = "🏆 You won!";
-    document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
+  if (gameMode === 'pvp') {
+    const p1wins = computerDeck.length === 0;
+    document.getElementById("end-title").textContent = p1wins ? "🏆 Player 1 wins!" : "🏆 Player 2 wins!";
+    document.getElementById("end-sub").textContent = "Great game!";
   } else {
-    document.getElementById("end-title").textContent = "💻 Computer wins!";
-    document.getElementById("end-sub").textContent = "No monsters left. Try again!";
+    const isWin = computerDeck.length === 0 && lives > 0;
+    if (isWin) {
+      totalMoney += 100;
+      document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+      document.getElementById("end-title").textContent = "🏆 You won!";
+      document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
+    } else {
+      document.getElementById("end-title").textContent = "💻 Computer wins!";
+      document.getElementById("end-sub").textContent = "No lives left. Try again!";
+    }
   }
 
   overlay.style.display = "flex";
@@ -201,8 +307,10 @@ function endGame() {
 
 function restartGame() {
   document.getElementById("end-overlay").style.display = "none";
-  startGame();
+  document.getElementById("start-screen").style.display = "flex";
 }
+
+// ── Avatar ───────────────────────────────────────────────────
 
 function toggleAvatarMenu() {
   document.getElementById("avatar-menu").classList.toggle("open");
@@ -212,7 +320,6 @@ function selectAvatar(emoji) {
   document.getElementById("current-avatar").textContent = emoji;
   document.getElementById("avatar-menu").classList.remove("open");
 }
-
 
 // ── Start ────────────────────────────────────────────────────
 
