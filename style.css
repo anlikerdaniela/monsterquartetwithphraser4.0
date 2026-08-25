@@ -217,6 +217,7 @@ header p {
   font-size: clamp(0.7rem, 9cqi, 1.5rem);
   color: var(--accent1);
 }
+.card__back-title--thinking { animation: thinkingPulse 1.2s ease-in-out infinite; }
 
 .card__header {
   display: flex; align-items: center; gap: 0.3rem;
@@ -307,6 +308,11 @@ header p {
 .result-message--win  { background: rgba(52,211,153,0.2);  color: var(--win); }
 .result-message--lose { background: rgba(248,113,113,0.2); color: var(--lose); }
 .result-message--draw { background: rgba(251,191,36,0.2);  color: var(--draw); }
+.result-message--prompt { font-size: clamp(0.95rem, 2.4vmin, 1.4rem); }
+@keyframes thinkingPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
 
 /* ── Buttons ── */
 .btn {

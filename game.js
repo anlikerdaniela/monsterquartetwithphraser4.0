@@ -86,20 +86,21 @@ function nextRound() {
       // Player 1 dran: linke Karte klickbar, rechte versteckt
       renderCard("player-card", playerCard, true);
       renderHidden("computer-card");
-      setMessage("👤 Player 1 — Choose a property!");
+      setMessage("👤 Player 1 — Choose a property!", "result-message--prompt");
     } else {
       // Player 2 dran: linke Karte versteckt, rechte klickbar
       renderHidden("player-card");
       renderCard("computer-card", computerCard, true);
-      setMessage("👤 Player 2 — Choose a property!");
+      setMessage("👤 Player 2 — Choose a property!", "result-message--prompt");
     }
   } else {
     renderCard("player-card", playerCard, isPlayerTurn);
-    renderHidden("computer-card");
     if (isPlayerTurn) {
-      setMessage("Choose a property!");
+      renderHidden("computer-card");
+      setMessage("Choose a property!", "result-message--prompt");
     } else {
-      setMessage("💻 Computer is choosing...");
+      renderHidden("computer-card", "Computer is choosing...", true);
+      setMessage("");
       setTimeout(computerChoose, 1500);
     }
   }
@@ -117,13 +118,13 @@ function renderCard(containerId, monster, clickable) {
   document.getElementById(containerId).innerHTML = buildCardHTML(monster, clickable);
 }
 
-function renderHidden(containerId) {
+function renderHidden(containerId, title = "Monster Quartet", thinking = false) {
   document.getElementById(containerId).innerHTML = `
     <div class="card card--hidden">
       <div class="card__back">
         <div class="card__back-monster">🐙</div>
         <div class="card__back-stars">✨ ⭐ ✨</div>
-        <h3 class="card__back-title">Monster Quartet</h3>
+        <h3 class="card__back-title${thinking ? " card__back-title--thinking" : ""}">${title}</h3>
       </div>
     </div>`;
 }
