@@ -69,6 +69,7 @@ function startGame() {
 
 function nextRound() {
   roundActive = true;
+  hideLifeLostOverlay();
 
   if (playerDeck.length === 0 || computerDeck.length === 0) {
     endGame();
@@ -110,6 +111,16 @@ function setMessage(text, cls = "") {
   const el = document.getElementById("result-message");
   el.textContent = text;
   el.className = "result-message" + (cls ? " " + cls : "");
+}
+
+function showLifeLostOverlay(text) {
+  const el = document.getElementById("life-lost-overlay");
+  el.textContent = text;
+  el.classList.add("show");
+}
+
+function hideLifeLostOverlay() {
+  document.getElementById("life-lost-overlay").classList.remove("show");
 }
 
 // ── Karten rendern ───────────────────────────────────────────
@@ -210,7 +221,7 @@ function chooseEigenschaft(key) {
     const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
     playerDeck = shuffled.slice(0, 6);
     computerDeck = shuffled.slice(6);
-    setMessage(`💔 Life lost! ${lives} lives remaining.`);
+    showLifeLostOverlay(`💔 Life lost! ${lives} lives remaining.`);
   }
 
   if (computerDeck.length === 0 || playerDeck.length === 0) {

@@ -150,6 +150,32 @@ header p {
   justify-content: center;
   justify-items: center;
   margin: 0 auto;
+  position: relative;
+}
+
+/* Grosse Meldung über beiden Karten, z.B. bei Lebensverlust */
+.life-lost-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(10, 5, 20, 0.8);
+  border-radius: var(--radius);
+  backdrop-filter: blur(3px);
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.4rem, 6vmin, 3.2rem);
+  color: var(--lose);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  animation: lifeLostPop 0.35s ease-out;
+}
+.life-lost-overlay.show { display: flex; }
+@keyframes lifeLostPop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .player-side, .computer-side {
