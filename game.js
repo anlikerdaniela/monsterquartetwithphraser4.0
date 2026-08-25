@@ -1,4 +1,7 @@
-
+// =====================
+// SÜSSE MONSTER QUARTETT
+// game.js
+// =====================
 
 let allMonsters = [];
 let playerDeck = [];
@@ -42,17 +45,18 @@ function startGame() {
   updateLives();
   updateScores();
 
-  // Labels anpassen je nach Modus
   if (gameMode === 'pvp') {
     document.querySelector(".player-side .side-label").textContent = "👤 Player 1";
     document.querySelector(".computer-side .side-label").textContent = "👤 Player 2";
     document.querySelector(".scoreboard .score-item:first-child span").textContent = "Player 1";
     document.querySelector(".scoreboard .score-item:last-child span").textContent = "Player 2";
+    document.querySelector(".lives").style.display = "none";
   } else {
     document.querySelector(".player-side .side-label").textContent = "👤 you";
     document.querySelector(".computer-side .side-label").textContent = "💻 computer";
     document.querySelector(".scoreboard .score-item:first-child span").textContent = "your cards";
     document.querySelector(".scoreboard .score-item:last-child span").textContent = "computer";
+    document.querySelector(".lives").style.display = "flex";
   }
 
   nextRound();
@@ -76,92 +80,61 @@ function nextRound() {
 
   if (gameMode === 'pvp') {
     if (isPlayerTurn) {
-      // Player 1 ist dran — linke Karte sichtbar, rechte versteckt
-      renderPlayerCard(true);
-      renderComputerCard(true);
-      document.getElementById("result-message").textContent = "👤 Player 1 — Choose a property!";
+      // Player 1 dran: linke Karte klickbar, rechte versteckt
+      renderCard("player-card", playerCard, true);
+      renderHidden("computer-card");
+      setMessage("👤 Player 1 — Choose a property!");
     } else {
-      // Player 2 ist dran — rechte Karte sichtbar, linke versteckt
-      renderPlayerCard(false);
-      renderComputerCard(false);
-      document.getElementById("result-message").textContent = "👤 Player 2 — Choose a property!";
+      // Player 2 dran: linke Karte versteckt, rechte klickbar
+      renderHidden("player-card");
+      renderCard("computer-card", computerCard, true);
+      setMessage("👤 Player 2 — Choose a property!");
     }
-    document.getElementById("result-message").className = "result-message";
-    enablePlayerClick(true, isPlayerTurn);
   } else {
-    renderPlayerCard(true);
-    renderComputerCard(true);
+    renderCard("player-card", playerCard, isPlayerTurn);
+    renderHidden("computer-card");
     if (isPlayerTurn) {
-      document.getElementById("result-message").textContent = "Choose a property!";
-      document.getElementById("result-message").className = "result-message";
-      enablePlayerClick(true, true);
+      setMessage("Choose a property!");
     } else {
-      document.getElementById("result-message").textContent = "💻 Computer is choosing...";
-      document.getElementById("result-message").className = "result-message";
-      enablePlayerClick(false, false);
+      setMessage("💻 Computer is choosing...");
       setTimeout(computerChoose, 1500);
     }
   }
 }
 
+function setMessage(text, cls = "") {
+  const el = document.getElementById("result-message");
+  el.textContent = text;
+  el.className = "result-message" + (cls ? " " + cls : "");
+}
+
 // ── Karten rendern ───────────────────────────────────────────
 
-function renderPlayerCard(clickable) {
-  const container = document.getElementById("player-card");
-  if (gameMode === 'pvp' && !isPlayerTurn) {
-    container.innerHTML = `
-      <div class="card card--hidden">
-        <div class="card__back">
-          <div class="card__back-monster">🐙</div>
-          <div class="card__back-stars">✨ ⭐ ✨</div>
-          <h3 class="card__back-title">Monster Quartet</h3>
-        </div>
-      </div>`;
-  } else {
-    container.innerHTML = buildCardHTML(playerCard, clickable && isPlayerTurn);
-  }
+function renderCard(containerId, monster, clickable) {
+  document.getElementById(containerId).innerHTML = buildCardHTML(monster, clickable);
 }
 
-function renderComputerCard(hidden = false) {
-  const container = document.getElementById("computer-card");
-  if (gameMode === 'pvp' && isPlayerTurn) {
-    // Player 1 dran → rechte Karte versteckt
-    container.innerHTML = `
-      <div class="card card--hidden">
-        <div class="card__back">
-          <div class="card__back-monster">🐙</div>
-          <div class="card__back-stars">✨ ⭐ ✨</div>
-          <h3 class="card__back-title">Monster Quartet</h3>
-        </div>
-      </div>`;
-  } else if (gameMode === 'pvp' && !isPlayerTurn) {
-    // Player 2 dran → rechte Karte klickbar
-    container.innerHTML = buildCardHTML(computerCard, true, true);
-  } else if (hidden) {
-    container.innerHTML = `
-      <div class="card card--hidden">
-        <div class="card__back">
-          <div class="card__back-monster">🐙</div>
-          <div class="card__back-stars">✨ ⭐ ✨</div>
-          <h3 class="card__back-title">Monster Quartet</h3>
-        </div>
-      </div>`;
-  } else {
-    container.innerHTML = buildCardHTML(computerCard, false);
-  }
+function renderHidden(containerId) {
+  document.getElementById(containerId).innerHTML = `
+    <div class="card card--hidden">
+      <div class="card__back">
+        <div class="card__back-monster">🐙</div>
+        <div class="card__back-stars">✨ ⭐ ✨</div>
+        <h3 class="card__back-title">Monster Quartet</h3>
+      </div>
+    </div>`;
 }
 
-function buildCardHTML(monster, isClickable, isRight = false) {
+function buildCardHTML(monster, isClickable) {
   const rows = Object.entries(monster.eigenschaften)
     .map(([key, val]) => `
-      <div class="stat-row ${isClickable ? "stat-row--clickable" : ""}" 
+      <div class="stat-row ${isClickable ? "stat-row--clickable" : ""}"
            ${isClickable ? `onclick="chooseEigenschaft('${key}')"` : ""}
            data-key="${key}">
         <span class="stat-label">${eigenschaftLabels[key]}</span>
         <span class="stat-value">${val}</span>
         <div class="stat-bar"><div class="stat-bar__fill" style="width:${val}%"></div></div>
-      </div>`)
-    .join("");
+      </div>`).join("");
 
   return `
     <div class="card">
@@ -173,14 +146,7 @@ function buildCardHTML(monster, isClickable, isRight = false) {
     </div>`;
 }
 
-// ── Computer / Klick ─────────────────────────────────────────
-
-function enablePlayerClick(enabled, leftSide) {
-  document.querySelectorAll("#player-card .stat-row--clickable, #computer-card .stat-row--clickable").forEach(row => {
-    row.style.pointerEvents = enabled ? "auto" : "none";
-    row.style.opacity = enabled ? "1" : "0.5";
-  });
-}
+// ── Computer ─────────────────────────────────────────────────
 
 function computerChoose() {
   const keys = Object.keys(computerCard.eigenschaften);
@@ -200,33 +166,31 @@ function chooseEigenschaft(key) {
   const computerVal = computerCard.eigenschaften[key];
 
   // Beide Karten aufdecken
-  document.getElementById("player-card").innerHTML = buildCardHTML(playerCard, false);
-  document.getElementById("computer-card").innerHTML = buildCardHTML(computerCard, false);
-
+  renderCard("player-card", playerCard, false);
+  renderCard("computer-card", computerCard, false);
   highlightStat(key, playerVal, computerVal);
-
-  const msgEl = document.getElementById("result-message");
 
   playerDeck.shift();
   computerDeck.shift();
 
   if (playerVal > computerVal) {
-    msgEl.textContent = gameMode === 'pvp'
-      ? `🎉 Player 1 wins! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`
-      : `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
-    msgEl.className = "result-message result-message--win";
-    playerDeck.push(playerCard);
-    playerDeck.push(computerCard);
+    setMessage(
+      gameMode === 'pvp'
+        ? `🎉 Player 1 wins! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`
+        : `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`,
+      "result-message--win"
+    );
+    playerDeck.push(playerCard, computerCard);
   } else if (computerVal > playerVal) {
-    msgEl.textContent = gameMode === 'pvp'
-      ? `🎉 Player 2 wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`
-      : `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`;
-    msgEl.className = "result-message result-message--lose";
-    computerDeck.push(computerCard);
-    computerDeck.push(playerCard);
+    setMessage(
+      gameMode === 'pvp'
+        ? `🎉 Player 2 wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`
+        : `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`,
+      "result-message--lose"
+    );
+    computerDeck.push(computerCard, playerCard);
   } else {
-    msgEl.textContent = `🤝 Draw! Both have ${playerVal}`;
-    msgEl.className = "result-message result-message--draw";
+    setMessage(`🤝 Draw! Both have ${playerVal}`, "result-message--draw");
     playerDeck.push(playerCard);
     computerDeck.push(computerCard);
   }
@@ -234,16 +198,14 @@ function chooseEigenschaft(key) {
   isPlayerTurn = !isPlayerTurn;
   updateScores();
 
-  // Leben verlieren wenn keine Karten (nur AI)
   if (gameMode === 'ai' && playerDeck.length === 0) {
     lives--;
     updateLives();
     if (lives <= 0) { setTimeout(endGame, 800); return; }
     const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
-    const half = Math.floor(shuffled.length / 2);
-    playerDeck = shuffled.slice(0, half);
-    computerDeck = shuffled.slice(half);
-    msgEl.textContent = `💔 Life lost! ${lives} lives remaining.`;
+    playerDeck = shuffled.slice(0, 6);
+    computerDeck = shuffled.slice(6);
+    setMessage(`💔 Life lost! ${lives} lives remaining.`);
   }
 
   if (computerDeck.length === 0 || playerDeck.length === 0) {
@@ -253,8 +215,6 @@ function chooseEigenschaft(key) {
 
   document.getElementById("next-btn").style.display = "inline-block";
 }
-
-// ── Highlight ────────────────────────────────────────────────
 
 function highlightStat(key, playerVal, computerVal) {
   document.querySelectorAll("#player-card .stat-row").forEach(row => {
@@ -268,23 +228,19 @@ function highlightStat(key, playerVal, computerVal) {
   });
 }
 
-// ── Punktestand & Ende ───────────────────────────────────────
-
 function updateScores() {
   document.getElementById("player-count").textContent = playerDeck.length;
   document.getElementById("computer-count").textContent = computerDeck.length;
 }
 
 function updateLives() {
-  const lifeEls = document.querySelectorAll(".life");
-  lifeEls.forEach((el, i) => {
+  document.querySelectorAll(".life").forEach((el, i) => {
     el.classList.toggle("life--lost", i >= lives);
   });
 }
 
 function endGame() {
   const overlay = document.getElementById("end-overlay");
-
   if (gameMode === 'pvp') {
     const p1wins = computerDeck.length === 0;
     document.getElementById("end-title").textContent = p1wins ? "🏆 Player 1 wins!" : "🏆 Player 2 wins!";
@@ -301,7 +257,6 @@ function endGame() {
       document.getElementById("end-sub").textContent = "No lives left. Try again!";
     }
   }
-
   overlay.style.display = "flex";
 }
 
@@ -310,9 +265,8 @@ function restartGame() {
   document.getElementById("start-screen").style.display = "flex";
 }
 
-// ── Avatar ───────────────────────────────────────────────────
-
-function toggleAvatarMenu() {
+function toggleAvatarMenu(event) {
+  event.stopPropagation();
   document.getElementById("avatar-menu").classList.toggle("open");
 }
 
@@ -321,6 +275,8 @@ function selectAvatar(emoji) {
   document.getElementById("avatar-menu").classList.remove("open");
 }
 
-// ── Start ────────────────────────────────────────────────────
+document.addEventListener("click", () => {
+  document.getElementById("avatar-menu")?.classList.remove("open");
+});
 
 window.addEventListener("DOMContentLoaded", loadMonsters);

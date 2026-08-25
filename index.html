@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🐙 sweet monster quartet</title>
+  <title>🐙 Sweet Monster Quartet</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
   <!-- Startbildschirm -->
@@ -17,22 +15,15 @@
       <h1 class="start-title">Sweet Monster Quartet</h1>
       <p class="start-sub">Choose your game mode</p>
       <div class="start-buttons">
-        <button class="btn btn--primary" onclick="startMode('ai')">
-          🤖 Play vs Computer
-        </button>
-        <button class="btn btn--secondary" onclick="startMode('pvp')">
-          👥 Two Players
-        </button>
+        <button class="btn btn--primary" onclick="startMode('ai')">🤖 Play vs Computer</button>
+        <button class="btn btn--secondary" onclick="startMode('pvp')">👥 Two Players</button>
       </div>
     </div>
   </div>
 
-
-
-
   <!-- Header -->
   <header>
-    <div class="avatar-wrapper" onclick="toggleAvatarMenu()">
+    <div class="avatar-wrapper" onclick="toggleAvatarMenu(event)">
       <div class="avatar" id="current-avatar">🧚‍♀️</div>
       <div class="avatar-menu" id="avatar-menu">
         <p class="avatar-menu-title">Choose your avatar</p>
@@ -52,31 +43,17 @@
         </div>
       </div>
     </div>
-
-    <div class="avatar-wrapper" onclick="toggleAvatarMenu()">
-      <div class="avatar" id="current-avatar">🧚‍♀️</div>
-      <div class="avatar-menu" id="avatar-menu">
-        ...
-      </div>
-    </div>
-
-    <!-- NEU: Münze -->
     <div class="wallet">
       <span class="wallet-coin">🪙</span>
       <span class="wallet-amount" id="wallet-amount">$0</span>
     </div>
-
-
-
-
-    <h1>🐙 sweet monster quartet</h1>
+    <h1>🐙 Sweet Monster Quartet</h1>
     <div class="wavy-lines">
       <svg viewBox="0 0 3000 120" preserveAspectRatio="none">
-        <path class="wave wave1" d="M0,60 C375,10 750,110 1125,60 C1500,10 1875,110 2250,60 C2625,10 2850,80 3000,60" />
-        <path class="wave wave2" d="M0,80 C400,20 800,120 1200,70 C1600,20 2000,100 2400,60 C2700,30 2900,90 3000,80" />
+        <path class="wave wave1" d="M0,60 C375,10 750,110 1125,60 C1500,10 1875,110 2250,60 C2625,10 2850,80 3000,60"/>
+        <path class="wave wave2" d="M0,80 C400,20 800,120 1200,70 C1600,20 2000,100 2400,60 C2700,30 2900,90 3000,80"/>
       </svg>
     </div>
-    <p>Choose your strongest ability and defeat the computer!</p>
     <div class="lives">
       <span class="life">🥚</span>
       <span class="life">🥚</span>
@@ -84,7 +61,7 @@
     </div>
   </header>
 
-  <!-- Punktestand -->
+  <!-- Scoreboard -->
   <div class="scoreboard">
     <div class="score-item">
       <span>your cards</span>
@@ -96,13 +73,11 @@
     </div>
   </div>
 
+  <!-- Spielfeld -->
   <div class="arena">
     <div class="player-side">
       <div class="side-label">👤 you</div>
       <div id="player-card"></div>
-    </div>
-    <div class = "timer">
-      
     </div>
     <div class="computer-side">
       <div class="side-label">💻 computer</div>
@@ -110,13 +85,10 @@
     </div>
   </div>
 
-  <!-- Ergebnis -->
+  <!-- Ergebnis + Button -->
   <div class="result-area">
     <div id="result-message" class="result-message">load game...</div>
-    <br />
-    <button id="next-btn" class="btn btn--primary" onclick="nextRound()">
-      next round ➜
-    </button>
+    <button id="next-btn" class="btn btn--primary" onclick="nextRound()">next round ➜</button>
   </div>
 
   <!-- End-Screen -->
@@ -128,22 +100,13 @@
     </div>
   </div>
 
-  <script src="game.js"></script>
-
-
-
   <div class="bubbles">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
     <div class="bubble"></div>
   </div>
-</body>
 
+  <script src="game.js"></script>
+</body>
 </html>
