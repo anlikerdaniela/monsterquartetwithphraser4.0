@@ -122,13 +122,14 @@ header p {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
   gap: clamp(0.5rem, 2vmin, 2rem);
-  width: 100%;
-  max-width: min(750px, 98vw);
+  width: fit-content;
+  max-width: 98vw;
   padding: 0 clamp(0.4rem, 1.5vmin, 1rem);
   flex-shrink: 0;
   align-items: start;
   justify-content: center;
   justify-items: center;
+  margin: 0 auto;
 }
 
 #player-card, #computer-card {
@@ -365,6 +366,9 @@ header p {
     gap: 0.3rem;
     padding: 0 0.3rem;
   }
+
+
+
   #player-card, #computer-card { min-height: clamp(150px, 40vw, 280px); }
   .card { width: 100%; max-width: 100%; padding: 0.3rem; }
   .card--hidden { width: 100%; max-width: 100%; min-height: clamp(150px, 40vw, 280px); }
@@ -424,10 +428,6 @@ header p {
 
 .settings-button:hover { background: var(--card-bg); }
 
-.arena {
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
-  max-width: min(900px, 98vw);
-}
 
 
 
