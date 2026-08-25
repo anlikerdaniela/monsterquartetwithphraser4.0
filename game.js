@@ -148,7 +148,6 @@ function chooseEigenschaft(key) {
 
   const msgEl = document.getElementById("result-message");
 
-  // Karten aus Deck entfernen
   playerDeck.shift();
   computerDeck.shift();
 
@@ -182,7 +181,6 @@ function chooseEigenschaft(key) {
       return;
     }
 
-    // Neue Karten für nächste Runde
     const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
     const half = Math.floor(shuffled.length / 2);
     playerDeck = shuffled.slice(0, half);
@@ -190,14 +188,8 @@ function chooseEigenschaft(key) {
     msgEl.textContent = `💔 Life lost! ${lives} lives remaining.`;
   }
 
-  // Computer hat alle Karten → Spielende
-  if (computerDeck.length === allMonsters.length) {
-    setTimeout(endGame, 800);
-    return;
-  }
-
-  // Du hast alle Karten → Spielende
-  if (playerDeck.length === allMonsters.length) {
+  // Computer hat keine Karten → du gewinnst!
+  if (computerDeck.length === 0) {
     setTimeout(endGame, 800);
     return;
   }
@@ -234,7 +226,7 @@ function updateLives() {
 }
 
 function endGame() {
-  const isWin = playerDeck.length === allMonsters.length || lives > 0 && computerDeck.length === 0;
+  const isWin = computerDeck.length === 0 && lives > 0;
   const overlay = document.getElementById("end-overlay");
 
   if (isWin) {
