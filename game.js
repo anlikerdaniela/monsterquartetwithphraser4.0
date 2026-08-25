@@ -260,6 +260,18 @@ function highlightStat(key, playerVal, computerVal) {
 function updateScores() {
   document.getElementById("player-count").textContent = playerDeck.length;
   document.getElementById("computer-count").textContent = computerDeck.length;
+  setDeckStack("player-card", playerDeck.length);
+  setDeckStack("computer-card", computerDeck.length);
+}
+
+// Zeigt dezent im Hintergrund ein paar gestapelte Kartenkanten, je nachdem
+// wie viele Karten im jeweiligen Stapel noch übrig sind.
+function setDeckStack(containerId, count) {
+  const el = document.getElementById(containerId);
+  el.classList.remove("deck-stack--1", "deck-stack--2", "deck-stack--3");
+  if (count >= 7) el.classList.add("deck-stack--3");
+  else if (count >= 4) el.classList.add("deck-stack--2");
+  else if (count >= 2) el.classList.add("deck-stack--1");
 }
 
 function updateLives() {

@@ -22,7 +22,7 @@
   /* Geschätzter Platzbedarf für Header/Scoreboard/Ergebnisbereich —
      begrenzt die Kartenhöhe, damit die Karte nie über den Bildschirm
      hinausragt, auch wenn die Spalte an sich breiter Platz hätte. */
-  --reserved-vh: 48.5vh;
+  --reserved-vh: 49.5vh;
   --card-max-h: calc(100dvh - var(--reserved-vh));
   --card-width: min(var(--cell-w), calc(var(--card-max-h) / var(--card-ratio)), 460px);
 }
@@ -196,6 +196,38 @@ header p {
   display: flex;
   justify-content: center;
   container-type: inline-size;
+  position: relative;
+}
+
+/* Dezenter Kartenstapel im Hintergrund — zeigt an, dass hier noch weitere
+   Karten liegen. Die Anzahl der sichtbaren "Kanten" richtet sich grob
+   danach, wie viele Karten der Stapel noch enthält. */
+#player-card::before, #computer-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 2px solid rgba(167, 139, 250, 0.3);
+  opacity: 0;
+  z-index: -1;
+  transform: translate(7px, 10px);
+  transition: opacity 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Je mehr Karten im Stapel, desto mehr Kanten schauen dahinter hervor. */
+#player-card.deck-stack--1::before, #computer-card.deck-stack--1::before,
+#player-card.deck-stack--2::before, #computer-card.deck-stack--2::before,
+#player-card.deck-stack--3::before, #computer-card.deck-stack--3::before {
+  opacity: 1;
+}
+
+#player-card.deck-stack--2::before, #computer-card.deck-stack--2::before {
+  box-shadow: 7px 10px 0 0 var(--surface);
+}
+
+#player-card.deck-stack--3::before, #computer-card.deck-stack--3::before {
+  box-shadow: 7px 10px 0 0 var(--surface), 14px 20px 0 0 var(--card-bg);
 }
 
 .side-label {
@@ -326,7 +358,8 @@ header p {
   padding: 0.3rem 1rem clamp(0.4rem, 1.6vh, 1.1rem);
   width: 100%; flex-shrink: 0;
   display: flex; flex-direction: column;
-  align-items: center; gap: 0.3rem; margin-top: 0.2rem;
+  align-items: center; gap: 0.5rem;
+  margin-top: clamp(0.6rem, 2.2vh, 1.3rem);
 }
 .result-message {
   font-size: clamp(1rem, 2.5vmin, 1.5rem); font-weight: 700;
