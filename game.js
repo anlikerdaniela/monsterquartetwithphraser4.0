@@ -185,6 +185,7 @@ function chooseEigenschaft(key) {
       "result-message--win"
     );
     playerDeck.push(playerCard, computerCard);
+    isPlayerTurn = true; // Gewinner wählt auch die nächste Runde
   } else if (computerVal > playerVal) {
     setMessage(
       gameMode === 'pvp'
@@ -193,13 +194,13 @@ function chooseEigenschaft(key) {
       "result-message--lose"
     );
     computerDeck.push(computerCard, playerCard);
+    isPlayerTurn = false; // Gewinner wählt auch die nächste Runde
   } else {
     setMessage(`🤝 Draw! Both have ${playerVal}`, "result-message--draw");
     playerDeck.push(playerCard);
     computerDeck.push(computerCard);
+    // Bei Unentschieden bleibt die Wahl bei der gleichen Person.
   }
-
-  isPlayerTurn = !isPlayerTurn;
   updateScores();
 
   if (gameMode === 'ai' && playerDeck.length === 0) {
