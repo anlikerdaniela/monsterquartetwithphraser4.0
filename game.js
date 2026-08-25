@@ -10,6 +10,7 @@ let isPlayerTurn = true;
 let lives = 3;
 let totalMoney = 0;
 let gameMode = 'ai';
+let musicEnabled = false;
 
 const eigenschaftLabels = {
   niedlichkeit: "💖 Sweetness",
@@ -24,6 +25,7 @@ const eigenschaftLabels = {
 function startMode(mode) {
   gameMode = mode;
   document.getElementById("start-screen").style.display = "none";
+  closeSettings();
   startGame();
 }
 
@@ -307,18 +309,36 @@ function endGame() {
 
 function restartGame() {
   document.getElementById("end-overlay").style.display = "none";
+  closeSettings();
   document.getElementById("start-screen").style.display = "flex";
 }
 
 // ── Avatar ───────────────────────────────────────────────────
 
-function toggleAvatarMenu() {
-  document.getElementById("avatar-menu").classList.toggle("open");
+function toggleSettings() {
+  const overlay = document.getElementById("settings-overlay");
+  const isOpen = overlay.classList.toggle("open");
+  overlay.setAttribute("aria-hidden", String(!isOpen));
 }
 
-function selectAvatar(emoji) {
-  document.getElementById("current-avatar").textContent = emoji;
-  document.getElementById("avatar-menu").classList.remove("open");
+function selectAvatar(imageName) {
+  document.querySelectorAll("[data-avatar-display]").forEach(display => {
+    display.src = `pictures/${imageName}`;
+  });
+}
+
+function closeSettings() {
+  const overlay = document.getElementById("settings-overlay");
+  if (!overlay) return;
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden", "true");
+}
+
+function toggleMusic(enabled) {
+  musicEnabled = enabled;
+  document.getElementById("music-status").textContent = musicEnabled
+    ? "Music will be added later."
+    : "Music is off.";
 }
 
 // ── Start ────────────────────────────────────────────────────

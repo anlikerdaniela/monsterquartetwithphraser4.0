@@ -25,6 +25,23 @@
         </button>
       </div>
     </div>
+    <div id="rules-screen">
+
+      <div class="rules-box">
+        <div class="rules-inside">
+          <p>
+            Cards are destributed evenly between players.
+            You take turn one after another.
+            Choose a characteristic you want to bet on.
+            Check who´s monster is stronger by that criteria.
+            The looser gives the card to a winner.
+          <p>
+            Good luck.
+          </p>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
 
@@ -32,38 +49,12 @@
 
   <!-- Header -->
   <header>
-    <div class="avatar-wrapper" onclick="toggleAvatarMenu()">
-      <div class="avatar" id="current-avatar">🧚‍♀️</div>
-      <div class="avatar-menu" id="avatar-menu">
-        <p class="avatar-menu-title">Choose your avatar</p>
-        <div class="avatar-options">
-          <span onclick="selectAvatar('🧚')">🧚</span>
-          <span onclick="selectAvatar('🧚‍♀️')">🧚‍♀️</span>
-          <span onclick="selectAvatar('🧚‍♂️')">🧚‍♂️</span>
-          <span onclick="selectAvatar('👩')">👩</span>
-          <span onclick="selectAvatar('👨')">👨</span>
-          <span onclick="selectAvatar('👧')">👧</span>
-          <span onclick="selectAvatar('👦')">👦</span>
-          <span onclick="selectAvatar('👩‍🦰')">👩‍🦰</span>
-          <span onclick="selectAvatar('👩‍🦱')">👩‍🦱</span>
-          <span onclick="selectAvatar('👩‍🦳')">👩‍🦳</span>
-          <span onclick="selectAvatar('🧙‍♀️')">🧙‍♀️</span>
-          <span onclick="selectAvatar('🦸‍♀️')">🦸‍♀️</span>
-        </div>
+    <div class="player-profile">
+      <img class="header-avatar" data-avatar-display src="pictures/avatar1.png" alt="Selected avatar">
+      <div class="wallet">
+        <span class="wallet-coin">🪙</span>
+        <span class="wallet-amount" id="wallet-amount">$0</span>
       </div>
-    </div>
-
-    <div class="avatar-wrapper" onclick="toggleAvatarMenu()">
-      <div class="avatar" id="current-avatar">🧚‍♀️</div>
-      <div class="avatar-menu" id="avatar-menu">
-        ...
-      </div>
-    </div>
-
-    <!-- NEU: Münze -->
-    <div class="wallet">
-      <span class="wallet-coin">🪙</span>
-      <span class="wallet-amount" id="wallet-amount">$0</span>
     </div>
 
 
@@ -77,10 +68,22 @@
       </svg>
     </div>
     <p>Choose your strongest ability and defeat the computer!</p>
-    <div class="lives">
-      <span class="life">🥚</span>
-      <span class="life">🥚</span>
-      <span class="life">🥚</span>
+    <div class="header-actions">
+      <div class="lives">
+        <span class="life">
+          <img class="life-icon" src="pictures/egg.transparent.png" alt="Life">
+        </span>
+        <span class="life"> <img class="life-icon" src="pictures/egg.transparent.png" alt="Life">
+        </span>
+        <span class="life"> <img class="life-icon" src="pictures/egg.transparent.png" alt="Life">
+        </span>
+      </div>
+
+      <button class="settings-button" type="button" onclick="toggleSettings()" title="Open settings"
+        aria-label="Open settings">
+        ⚙️
+      </button>
+
     </div>
   </header>
 
@@ -101,8 +104,8 @@
       <div class="side-label">👤 you</div>
       <div id="player-card"></div>
     </div>
-    <div class = "timer">
-      
+    <div class="timer">
+
     </div>
     <div class="computer-side">
       <div class="side-label">💻 computer</div>
@@ -128,6 +131,46 @@
     </div>
   </div>
 
+  <div id="settings-overlay" class="settings-overlay" aria-hidden="true">
+    <div class="settings-box" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <button class="settings-close" type="button" onclick="toggleSettings()" aria-label="Close settings">x</button>
+
+      <button class="btn btn--primary settings-restart" type="button" onclick="restartGame()">
+        🔄 Restart
+      </button>
+
+      <div class="settings-section">
+        <h3>Avatar</h3>
+        <img class="settings-avatar" data-avatar-display src="pictures/avatar1.png" alt="Selected avatar">
+        <div class="avatar-options">
+          <button type="button" onclick="selectAvatar('avatar1.png')"><img src="pictures/avatar1.png"
+              alt="Avatar 1"></button>
+          <button type="button" onclick="selectAvatar('avatar2.png')"><img src="pictures/avatar2.png"
+              alt="Avatar 2"></button>
+          <button type="button" onclick="selectAvatar('avatar3.png')"><img src="pictures/avatar3.png"
+              alt="Avatar 3"></button>
+          <button type="button" onclick="selectAvatar('avatar4.png')"><img src="pictures/avatar4.png"
+              alt="Avatar 4"></button>
+          <button type="button" onclick="selectAvatar('avatar5.png')"><img src="pictures/avatar5.png"
+              alt="Avatar 5"></button>
+          <button type="button" onclick="selectAvatar('avatar6.png')"><img src="pictures/avatar6.png"
+              alt="Avatar 6"></button>
+          <button type="button" onclick="selectAvatar('avatar7.png')"><img src="pictures/avatar7.png"
+              alt="Avatar 7"></button>
+          <button type="button" onclick="selectAvatar('avatar8.png')"><img src="pictures/avatar8.png"
+              alt="Avatar 8"></button>
+        </div>
+      </div>
+
+      <label class="settings-toggle">
+        <span>🎵 Music</span>
+        <input id="music-toggle" type="checkbox" onchange="toggleMusic(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+      <p id="music-status" class="settings-note">Music will be added later.</p>
+    </div>
+  </div>
+
   <script src="game.js"></script>
 
 
@@ -145,5 +188,6 @@
     <div class="bubble"></div>
   </div>
 </body>
+
 
 </html>
