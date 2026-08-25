@@ -212,6 +212,8 @@ header p {
   border-radius: var(--radius);
   padding: clamp(0.35rem, 3.5cqi, 1rem);
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .card {
