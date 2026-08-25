@@ -342,6 +342,40 @@ header p {
   .arena { grid-template-columns: 1fr; }
   .computer-side { order: -1; }
   .scoreboard { gap: 1rem; padding: 0.6rem 1rem; }
+  #next-btn { bottom: 1rem; width: calc(100% - 2rem); text-align: center; }
+  header { padding: 0.5rem; }
+  header h1 { font-size: 1.4rem; }
+  .lives { font-size: 1.4rem; }
+  .wallet { font-size: 0.8rem; }
+  .card__name { font-size: 1.1rem; }
+  .card__emoji { font-size: 1.8rem; }
+  .stat-value { font-size: 1rem; }
+}
+
+@media (max-width: 768px) {
+  .arena { max-width: 100%; padding: 0 0.5rem; }
+  header { padding: 0.75rem; }
+  header h1 { font-size: 1.8rem; }
+  .card { padding: 0.8rem; }
+  .start-box { padding: 1.5rem; margin: 1rem; }
+  .start-title { font-size: 1.8rem; }
+}
+
+@media (max-width: 380px) {
+  header h1 { font-size: 1.1rem; }
+  .avatar { font-size: 1.5rem; }
+  .lives { font-size: 1.2rem; gap: 0.2rem; }
+  .card__name { font-size: 0.95rem; }
+  .stat-label { font-size: 0.7rem; }
+  .start-title { font-size: 1.4rem; }
+  .start-monster { font-size: 3rem; }
+}
+
+@media (min-width: 1024px) {
+  .arena { max-width: 1400px; }
+  .card__name { font-size: 1.6rem; }
+  .card__emoji { font-size: 3rem; }
+  .stat-value { font-size: 1.5rem; }
 }
 
 /* ── Animierte Blasen ── */
