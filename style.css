@@ -131,13 +131,12 @@ header p {
   justify-items: center;
 }
 
-.player-side, .computer-side {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 0.3rem;
-  width: 100%; min-width: 0;
+#player-card, #computer-card {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
 }
-
-
 
 .side-label {
   font-family: 'Fredoka One', cursive;
