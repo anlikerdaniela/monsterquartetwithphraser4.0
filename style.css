@@ -394,11 +394,13 @@ header p {
 
 /* Restored game controls and three-column play layout */
 .header-actions {
-  grid-column: 4;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   z-index: 10;
+  position: absolute;
+  top: 0.4rem;
+  right: 0.8rem;
 }
 
 .lives {
