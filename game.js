@@ -175,6 +175,9 @@ function computerChoose() {
 
 // ── Spiellogik ───────────────────────────────────────────────
 
+const ROUND_PAUSE_MS = 700; // Zeit zum Vergleichen, bevor die Verliererkarte wegfliegt
+const FLY_DURATION_MS = 550; // Dauer der Flug-Animation zum gegnerischen Stapel
+
 function chooseEigenschaft(key) {
   if (!roundActive) return;
   roundActive = false;
@@ -190,6 +193,8 @@ function chooseEigenschaft(key) {
   playerDeck.shift();
   computerDeck.shift();
 
+  let loserSide = null;
+
   if (playerVal > computerVal) {
     setMessage(
       gameMode === 'pvp'
@@ -199,6 +204,7 @@ function chooseEigenschaft(key) {
     );
     playerDeck.push(playerCard, computerCard);
     isPlayerTurn = true; // Gewinner wählt auch die nächste Runde
+    loserSide = "computer";
   } else if (computerVal > playerVal) {
     setMessage(
       gameMode === 'pvp'
@@ -208,12 +214,43 @@ function chooseEigenschaft(key) {
     );
     computerDeck.push(computerCard, playerCard);
     isPlayerTurn = false; // Gewinner wählt auch die nächste Runde
+    loserSide = "player";
   } else {
     setMessage(`🤝 Draw! Both have ${playerVal}`, "result-message--draw");
     playerDeck.push(playerCard);
     computerDeck.push(computerCard);
-    // Bei Unentschieden bleibt die Wahl bei der gleichen Person.
+    // Bei Unentschieden bleibt die Wahl bei der gleichen Person, keine Karte wandert.
   }
+
+  // Erst kurz die aufgedeckten Karten vergleichen lassen, dann die
+  // Verliererkarte zum Stapel der Gewinnerseite fliegen lassen, bevor
+  // Zähler, Kartenstapel-Optik und der "next round"-Button erscheinen.
+  setTimeout(() => {
+    if (loserSide) animateCardTransfer(loserSide);
+    setTimeout(finishRound, loserSide ? FLY_DURATION_MS : 0);
+  }, ROUND_PAUSE_MS);
+}
+
+// Lässt die Karte der Verliererseite sichtbar zum Kartenstapel der
+// Gewinnerseite fliegen (verkleinert, leicht gedreht, ausblendend).
+function animateCardTransfer(loserSide) {
+  const sourceContainerId = loserSide === "player" ? "player-card" : "computer-card";
+  const targetContainerId = loserSide === "player" ? "computer-card" : "player-card";
+  const sourceCard = document.querySelector(`#${sourceContainerId} .card`);
+  const targetContainer = document.getElementById(targetContainerId);
+  if (!sourceCard || !targetContainer) return;
+
+  const sourceRect = sourceCard.getBoundingClientRect();
+  const targetRect = targetContainer.getBoundingClientRect();
+  const dx = (targetRect.left + targetRect.width / 2) - (sourceRect.left + sourceRect.width / 2);
+  const dy = (targetRect.top + targetRect.height / 2) - (sourceRect.top + sourceRect.height / 2);
+
+  sourceCard.style.setProperty("--fly-dx", `${dx}px`);
+  sourceCard.style.setProperty("--fly-dy", `${dy}px`);
+  sourceCard.classList.add("card--flying");
+}
+
+function finishRound() {
   updateScores();
 
   if (gameMode === 'ai') {
