@@ -22,7 +22,7 @@
   /* Geschätzter Platzbedarf für Header/Scoreboard/Ergebnisbereich —
      begrenzt die Kartenhöhe, damit die Karte nie über den Bildschirm
      hinausragt, auch wenn die Spalte an sich breiter Platz hätte. */
-  --reserved-vh: 34vh;
+  --reserved-vh: 48.5vh;
   --card-max-h: calc(100dvh - var(--reserved-vh));
   --card-width: min(var(--cell-w), calc(var(--card-max-h) / var(--card-ratio)), 460px);
 }
@@ -60,7 +60,7 @@ header {
 
 header h1 {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.1rem, 3.2vmin, 2.2rem);
+  font-size: clamp(1.3rem, 3.9vmin, 2.6rem);
   line-height: 1.15;
   background: linear-gradient(135deg, var(--accent1), var(--accent2));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -70,7 +70,7 @@ header h1 {
 header p {
   display: block;
   color: var(--text-muted);
-  font-size: clamp(0.7rem, 1.8vmin, 1rem);
+  font-size: clamp(0.85rem, 2.2vmin, 1.2rem);
   grid-column: 3;
   text-align: center;
   margin-top: 0.1rem;
@@ -78,12 +78,12 @@ header p {
 }
 
 .wavy-lines {
-  position: absolute; top: 40%; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none; z-index: 0; 
-  margin-top: 15px;
+  width: 100%;
+  height: clamp(14px, 2.6vh, 26px);
+  flex-shrink: 0;
+  pointer-events: none;
 }
-.wavy-lines svg { width: 100%; height: 100%; }
+.wavy-lines svg { display: block; width: 100%; height: 100%; }
 .wave { fill: none; stroke-width: 1.5; opacity: 0.3; }
 .wave1 { stroke: #ff6eb4; animation: wavemove 6s ease-in-out infinite alternate; }
 .wave2 { stroke: #a78bfa; animation: wavemove 8s ease-in-out infinite alternate-reverse; }
@@ -135,8 +135,8 @@ header p {
   box-shadow: var(--shadow); flex-shrink: 0;
 }
 .score-item { text-align: center; }
-.score-item span { display: block; color: var(--text-muted); font-size: clamp(0.65rem, 1.5vmin, 0.9rem); }
-.score-item strong { font-size: clamp(1rem, 2.4vmin, 1.6rem); color: var(--accent2); font-family: 'Fredoka One', cursive; }
+.score-item span { display: block; color: var(--text-muted); font-size: clamp(0.8rem, 2vmin, 1.15rem); }
+.score-item strong { font-size: clamp(1.25rem, 3.1vmin, 2.05rem); color: var(--accent2); font-family: 'Fredoka One', cursive; }
 
 /* ── Arena — IMMER 2 Spalten nebeneinander, Karten direkt unter den Labels ── */
 .arena {
@@ -200,7 +200,7 @@ header p {
 
 .side-label {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(0.75rem, 1.8vmin, 1.15rem);
+  font-size: clamp(0.95rem, 2.4vmin, 1.5rem);
   color: var(--text-muted);
   flex: 0 0 auto;
 }
@@ -486,8 +486,8 @@ header p {
   header {
     padding: 0.2rem clamp(7rem, 33vw, 9.5rem);
   }
-  header h1 { font-size: clamp(0.75rem, 3.4vw, 1.15rem); }
-  header p { font-size: clamp(0.5rem, 2.1vw, 0.68rem); }
+  header h1 { font-size: clamp(0.95rem, 4.2vw, 1.4rem); }
+  header p { font-size: clamp(0.62rem, 2.6vw, 0.85rem); }
 
   /* Zusatzhöhe kommt den Werte-Zeilen zugute */
   .stat-row { padding: clamp(0.15rem, 0.9vh, 0.5rem) 0.3rem; }
@@ -934,21 +934,27 @@ header p {
 .wallet-coin { font-size: clamp(0.75rem, 2vmin, 1.15rem); }
 .wallet-amount { font-size: clamp(0.7rem, 1.9vmin, 1.05rem); }
 
-/* Kopfzeile als 3-Spalten-Grid: links Avatar/Wallet, Mitte Titel,
-   rechts Settings/Leben — dadurch nie Überlappung, unabhängig von
-   Bildschirmgrösse (löst das Ineinanderlaufen auf schmalen Handys). */
+/* Kopfzeile in zwei Zeilen: oben die Icons (Avatar/Wallet links,
+   Settings/Leben rechts), darunter zentriert Titel + Untertitel.
+   Dadurch nie Überlappung, unabhängig von Bildschirmgrösse. */
 header {
   grid-template-columns: auto minmax(0, 1fr) auto !important;
-  padding: 0.4rem clamp(0.5rem, 2vw, 1rem) !important;
+  grid-template-rows: auto auto auto !important;
+  row-gap: clamp(0.2rem, 1vh, 0.5rem) !important;
+  padding: 0.5rem clamp(0.5rem, 2vw, 1rem) !important;
 }
-header h1, header p { grid-column: 2; min-width: 0; }
-header h1 { grid-row: 1; }
-header p { grid-row: 2; }
+header h1, header p {
+  grid-column: 1 / -1 !important;
+  min-width: 0;
+  text-align: center;
+}
+header h1 { grid-row: 2; }
+header p { grid-row: 3; }
 
 .player-profile {
   position: static;
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   align-self: center;
   display: flex;
   align-items: center;
@@ -959,7 +965,7 @@ header p { grid-row: 2; }
 .header-actions {
   position: static;
   grid-column: 3;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   align-self: center;
   display: flex;
   align-items: center;
