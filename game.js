@@ -188,7 +188,7 @@ function chooseEigenschaft(key) {
     setMessage(
       gameMode === 'pvp'
         ? `🎉 Player 2 wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`
-        : `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`,
+        : `😢 Computer wins! You lost a life ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`,
       "result-message--lose"
     );
     computerDeck.push(computerCard, playerCard);
