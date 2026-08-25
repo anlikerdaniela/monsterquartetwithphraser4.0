@@ -11,6 +11,7 @@ let computerCard = null;
 let roundActive = false;
 let isPlayerTurn = true;
 let lives = 3;
+let computerLives = 3;
 let totalMoney = 0;
 let gameMode = 'ai';
 let musicEnabled = false;
@@ -45,6 +46,7 @@ function startGame() {
   computerDeck = shuffled.slice(half);
   isPlayerTurn = true;
   lives = 3;
+  computerLives = 3;
   updateLives();
   updateScores();
 
@@ -113,14 +115,14 @@ function setMessage(text, cls = "") {
   el.className = "result-message" + (cls ? " " + cls : "");
 }
 
-function showLifeLostOverlay(text) {
+function showLifeLostOverlay(text, cls = "") {
   const el = document.getElementById("life-lost-overlay");
   el.textContent = text;
-  el.classList.add("show");
+  el.className = "life-lost-overlay show" + (cls ? " " + cls : "");
 }
 
 function hideLifeLostOverlay() {
-  document.getElementById("life-lost-overlay").classList.remove("show");
+  document.getElementById("life-lost-overlay").className = "life-lost-overlay";
 }
 
 // ── Karten rendern ───────────────────────────────────────────
@@ -214,17 +216,28 @@ function chooseEigenschaft(key) {
   }
   updateScores();
 
-  if (gameMode === 'ai' && playerDeck.length === 0) {
-    lives--;
-    updateLives();
-    if (lives <= 0) { setTimeout(endGame, 800); return; }
-    const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
-    playerDeck = shuffled.slice(0, 6);
-    computerDeck = shuffled.slice(6);
-    showLifeLostOverlay(`💔 Life lost! ${lives} lives remaining.`);
-  }
-
-  if (computerDeck.length === 0 || playerDeck.length === 0) {
+  if (gameMode === 'ai') {
+    if (playerDeck.length === 0) {
+      lives--;
+      updateLives();
+      if (lives <= 0) { setTimeout(endGame, 800); return; }
+      const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
+      playerDeck = shuffled.slice(0, 6);
+      computerDeck = shuffled.slice(6);
+      showLifeLostOverlay(`💔 Life lost! ${lives} lives remaining.`);
+    } else if (computerDeck.length === 0) {
+      // Der Computer braucht genauso viele Leben wie der Spieler, sonst
+      // würde das Spiel sofort beim ersten leeren Computer-Deck enden,
+      // während der Spieler bis zu 3 Anläufe bekommt — das war der Grund,
+      // warum der Spieler fast immer gewann.
+      computerLives--;
+      if (computerLives <= 0) { setTimeout(endGame, 800); return; }
+      const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
+      playerDeck = shuffled.slice(0, 6);
+      computerDeck = shuffled.slice(6);
+      showLifeLostOverlay(`💪 Computer is struggling! ${computerLives} lives left.`, "life-lost-overlay--good");
+    }
+  } else if (computerDeck.length === 0 || playerDeck.length === 0) {
     setTimeout(endGame, 800);
     return;
   }
@@ -262,7 +275,7 @@ function endGame() {
     document.getElementById("end-title").textContent = p1wins ? "🏆 Player 1 wins!" : "🏆 Player 2 wins!";
     document.getElementById("end-sub").textContent = "Great game!";
   } else {
-    const isWin = computerDeck.length === 0 && lives > 0;
+    const isWin = computerLives <= 0;
     if (isWin) {
       totalMoney += 100;
       document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
