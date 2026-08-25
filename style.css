@@ -339,17 +339,69 @@ header p {
 
 /* ── Responsive ── */
 @media (max-width: 560px) {
-  .arena { grid-template-columns: 1fr; }
-  .computer-side { order: -1; }
-  .scoreboard { gap: 1rem; padding: 0.6rem 1rem; }
-  #next-btn { bottom: 1rem; width: calc(100% - 2rem); text-align: center; }
-  header { padding: 0.5rem; }
-  header h1 { font-size: 1.4rem; }
-  .lives { font-size: 1.4rem; }
-  .wallet { font-size: 0.8rem; }
-  .card__name { font-size: 1.1rem; }
-  .card__emoji { font-size: 1.8rem; }
-  .stat-value { font-size: 1rem; }
+  body {
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  header {
+    padding: 0.4rem 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 { font-size: 1.1rem; }
+  .lives { font-size: 1.2rem; }
+  .wallet { font-size: 0.75rem; padding: 0.2rem 0.5rem; }
+  .avatar { font-size: 1.5rem; }
+
+  .scoreboard {
+    padding: 0.3rem 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .score-item strong { font-size: 1.1rem; }
+
+  .arena {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+    max-width: 100%;
+  }
+
+  .card {
+    padding: 0.5rem;
+  }
+
+  .card--hidden {
+    min-height: 180px;
+  }
+
+  .card__emoji { font-size: 1.4rem; }
+  .card__name { font-size: 0.85rem; }
+  .card__header { margin-bottom: 0.4rem; padding-bottom: 0.4rem; gap: 0.4rem; }
+
+  .stat-label { font-size: 0.6rem; }
+  .stat-value { font-size: 0.85rem; margin-top: -1rem; }
+  .stat-bar { height: 4px; margin-top: 0.2rem; }
+  .stat-row { padding: 0.2rem 0.3rem; margin-bottom: 0.2rem; }
+
+  .side-label { font-size: 0.8rem; }
+
+  .result-area { margin-top: 0.5rem; }
+  .result-message { font-size: 0.85rem; padding: 0.4rem 0.8rem; }
+
+  #next-btn {
+    bottom: 0.5rem;
+    width: calc(100% - 2rem);
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .wavy-lines { height: 60px; }
+  .card__back-monster { font-size: 2.5rem; }
+  .card__back-title { font-size: 1rem; }
 }
 
 @media (max-width: 768px) {
