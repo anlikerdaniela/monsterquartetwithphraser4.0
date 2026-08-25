@@ -84,7 +84,7 @@ header p {
   pointer-events: none;
 }
 .wavy-lines svg { display: block; width: 100%; height: 100%; }
-.wave { fill: none; stroke-width: 1.5; opacity: 0.3; }
+.wave { fill: none; stroke-width: 18; stroke-linecap: round; opacity: 0.35; }
 .wave1 { stroke: #ff6eb4; animation: wavemove 6s ease-in-out infinite alternate; }
 .wave2 { stroke: #a78bfa; animation: wavemove 8s ease-in-out infinite alternate-reverse; }
 @keyframes wavemove {
