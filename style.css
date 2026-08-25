@@ -60,7 +60,7 @@ header {
 
 header h1 {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.3rem, 3.9vmin, 2.6rem);
+  font-size: clamp(1rem, 2.8vmin, 1.55rem);
   line-height: 1.15;
   background: linear-gradient(135deg, var(--accent1), var(--accent2));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -70,7 +70,7 @@ header h1 {
 header p {
   display: block;
   color: var(--text-muted);
-  font-size: clamp(0.85rem, 2.2vmin, 1.2rem);
+  font-size: clamp(1rem, 2.8vmin, 1.55rem);
   grid-column: 3;
   text-align: center;
   margin-top: 0.1rem;
@@ -519,8 +519,6 @@ header p {
   header {
     padding: 0.2rem clamp(7rem, 33vw, 9.5rem);
   }
-  header h1 { font-size: clamp(0.95rem, 4.2vw, 1.4rem); }
-  header p { font-size: clamp(0.62rem, 2.6vw, 0.85rem); }
 
   /* Zusatzhöhe kommt den Werte-Zeilen zugute */
   .stat-row { padding: clamp(0.15rem, 0.9vh, 0.5rem) 0.3rem; }
