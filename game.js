@@ -10,6 +10,8 @@ let playerCard = null;
 let computerCard = null;
 let roundActive = false;
 let isPlayerTurn = true;
+let lives = 3;
+let totalMoney = 0;
 
 const eigenschaftLabels = {
   niedlichkeit: "💖 Sweetness",
@@ -33,6 +35,8 @@ function startGame() {
   playerDeck = shuffled.slice(0, half);
   computerDeck = shuffled.slice(half);
   isPlayerTurn = true;
+  lives = 3;
+  updateLives();
   updateScores();
   nextRound();
 }
@@ -144,27 +148,64 @@ function chooseEigenschaft(key) {
 
   const msgEl = document.getElementById("result-message");
 
+  // Karten aus Deck entfernen
+  playerDeck.shift();
+  computerDeck.shift();
+
   if (playerVal > computerVal) {
     msgEl.textContent = `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`;
     msgEl.className = "result-message result-message--win";
-    playerDeck.push(playerDeck.shift());
-    playerDeck.push(computerDeck.shift());
+    playerDeck.push(playerCard);
+    playerDeck.push(computerCard);
   } else if (computerVal > playerVal) {
     msgEl.textContent = `😢 Computer wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`;
     msgEl.className = "result-message result-message--lose";
-    computerDeck.push(computerDeck.shift());
-    computerDeck.push(playerDeck.shift());
+    computerDeck.push(computerCard);
+    computerDeck.push(playerCard);
   } else {
     msgEl.textContent = `🤝 Draw! Both have ${playerVal}`;
     msgEl.className = "result-message result-message--draw";
-    playerDeck.push(playerDeck.shift());
-    computerDeck.push(computerDeck.shift());
+    playerDeck.push(playerCard);
+    computerDeck.push(computerCard);
   }
 
   isPlayerTurn = !isPlayerTurn;
   updateScores();
+
+  // Leben verlieren wenn keine Karten mehr
+  if (playerDeck.length === 0) {
+    lives--;
+    updateLives();
+
+    if (lives <= 0) {
+      setTimeout(endGame, 800);
+      return;
+    }
+
+    // Neue Karten für nächste Runde
+    const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
+    const half = Math.floor(shuffled.length / 2);
+    playerDeck = shuffled.slice(0, half);
+    computerDeck = shuffled.slice(half);
+    msgEl.textContent = `💔 Life lost! ${lives} lives remaining.`;
+  }
+
+  // Computer hat alle Karten → Spielende
+  if (computerDeck.length === allMonsters.length) {
+    setTimeout(endGame, 800);
+    return;
+  }
+
+  // Du hast alle Karten → Spielende
+  if (playerDeck.length === allMonsters.length) {
+    setTimeout(endGame, 800);
+    return;
+  }
+
   document.getElementById("next-btn").style.display = "inline-block";
 }
+
+// ── Highlight ────────────────────────────────────────────────
 
 function highlightStat(key, playerVal, computerVal) {
   document.querySelectorAll("#player-card .stat-row").forEach(row => {
@@ -185,8 +226,15 @@ function updateScores() {
   document.getElementById("computer-count").textContent = computerDeck.length;
 }
 
+function updateLives() {
+  const lifeEls = document.querySelectorAll(".life");
+  lifeEls.forEach((el, i) => {
+    el.classList.toggle("life--lost", i >= lives);
+  });
+}
+
 function endGame() {
-  const isWin = playerDeck.length > 0;
+  const isWin = playerDeck.length === allMonsters.length || lives > 0 && computerDeck.length === 0;
   const overlay = document.getElementById("end-overlay");
 
   if (isWin) {
@@ -196,7 +244,7 @@ function endGame() {
     document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
   } else {
     document.getElementById("end-title").textContent = "💻 Computer wins!";
-    document.getElementById("end-sub").textContent = "No monsters left. Try again!";
+    document.getElementById("end-sub").textContent = "No lives left. Try again!";
   }
 
   overlay.style.display = "flex";
@@ -207,6 +255,8 @@ function restartGame() {
   startGame();
 }
 
+// ── Avatar ───────────────────────────────────────────────────
+
 function toggleAvatarMenu() {
   document.getElementById("avatar-menu").classList.toggle("open");
 }
@@ -215,7 +265,6 @@ function selectAvatar(emoji) {
   document.getElementById("current-avatar").textContent = emoji;
   document.getElementById("avatar-menu").classList.remove("open");
 }
-
 
 // ── Start ────────────────────────────────────────────────────
 
