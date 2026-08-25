@@ -510,6 +510,20 @@ header p { display: none; }
   font-size: 0.8rem;
 }
 
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.volume-control input {
+  width: 100%;
+  accent-color: var(--accent1);
+}
+
 #start-screen {
   flex-direction: column;
   gap: 0.5rem;

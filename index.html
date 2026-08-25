@@ -160,9 +160,15 @@
         <input id="music-toggle" type="checkbox" onchange="toggleMusic(this.checked)">
         <span class="toggle-slider"></span>
       </label>
-      <p id="music-status" class="settings-note">Music will be added later.</p>
+      <p id="music-status" class="settings-note">Music is off.</p>
+      <label class="volume-control" for="music-volume">
+        <span>Volume</span>
+        <input id="music-volume" type="range" min="0" max="100" value="50" oninput="setMusicVolume(this.value)">
+      </label>
     </div>
   </div>
+
+  <audio id="game-music" src="audio/happy-treefriends.mp3" loop preload="auto"></audio>
 
   <script src="game.js"></script>
 

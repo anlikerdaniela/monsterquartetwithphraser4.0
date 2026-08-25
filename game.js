@@ -35,6 +35,7 @@ function startMode(mode) {
 async function loadMonsters() {
   const res = await fetch("monsters.json");
   allMonsters = await res.json();
+  setMusicVolume(document.getElementById("music-volume").value);
 }
 
 function startGame() {
@@ -291,9 +292,21 @@ function closeSettings() {
 
 function toggleMusic(enabled) {
   musicEnabled = enabled;
-  document.getElementById("music-status").textContent = musicEnabled
-    ? "Music will be added later."
-    : "Music is off.";
+  const audio = document.getElementById("game-music");
+  const status = document.getElementById("music-status");
+
+  if (musicEnabled) {
+    audio.play();
+    status.textContent = "Music is on.";
+  } else {
+    audio.pause();
+    status.textContent = "Music is off.";
+  }
+}
+
+function setMusicVolume(value) {
+  const audio = document.getElementById("game-music");
+  if (audio) audio.volume = Number(value) / 100;
 }
 
 // ── Start ────────────────────────────────────────────────────
