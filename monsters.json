@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
+        "bild": "m1.png",
+
     "name": "Fluffmunch",
-    "emoji": "🐙",
-    "bild": "fluffmunch.png",
     "eigenschaften": {
       "niedlichkeit": 95,
       "staerke": 30,
@@ -14,9 +14,9 @@
   },
   {
     "id": 2,
-    "name": "Bubblewump",
-    "emoji": "🐲🫧",
-    "bild": "bubblewump.png",
+    "bild": "m2.png",
+        "name": "Bubblewump",
+
     "eigenschaften": {
       "niedlichkeit": 85,
       "staerke": 20,
@@ -27,9 +27,9 @@
   },
   {
     "id": 3,
-    "name": "Snorkelblob",
-    "emoji": "🦕",
-    "bild": "snorkelblob.png",
+    "bild": "m3.png",
+        "name": "Snorkelblob",
+
     "eigenschaften": {
       "niedlichkeit": 70,
       "staerke": 75,
@@ -40,9 +40,9 @@
   },
   {
     "id": 4,
-    "name": "Glimmerzap",
-    "emoji": "🐉",
-    "bild": "glimmerzap.png",
+    "bild": "m4.png",
+        "name": "Glimmerzap",
+
     "eigenschaften": {
       "niedlichkeit": 60,
       "staerke": 50,
@@ -53,9 +53,9 @@
   },
   {
     "id": 5,
-    "name": "Wobblegloop",
-    "emoji": "👾",
-    "bild": "wobblegloop.png",
+    "bild": "m5.png",
+        "name": "Wobblegloop",
+
     "eigenschaften": {
       "niedlichkeit": 90,
       "staerke": 40,
@@ -66,9 +66,9 @@
   },
   {
     "id": 6,
-    "name": "Spikelump",
-    "emoji": "🦖",
-    "bild": "spikelump.png",
+    "bild": "m6.png",
+        "name": "Spikelump",
+
     "eigenschaften": {
       "niedlichkeit": 75,
       "staerke": 85,
@@ -79,9 +79,8 @@
   },
   {
     "id": 7,
-    "name": "Twinklepuff",
-    "emoji": "🦇",
-    "bild": "twinklepuff.png",
+    "bild": "m7.png",
+        "name": "Twinklepuff",
     "eigenschaften": {
       "niedlichkeit": 99,
       "staerke": 15,
@@ -92,9 +91,8 @@
   },
   {
     "id": 8,
+    "bild": "m8.png",
     "name": "Grumblesnout",
-    "emoji": "🐗",
-    "bild": "grumblesnout.png",
     "eigenschaften": {
       "niedlichkeit": 40,
       "staerke": 95,
@@ -105,9 +103,10 @@
   },
   {
     "id": 9,
+    
+
+    "bild": "m9.png",
     "name": "Cuddlezorp",
-    "emoji": "🧛",
-    "bild": "cuddlezorp.png",
     "eigenschaften": {
       "niedlichkeit": 88,
       "staerke": 35,
@@ -118,9 +117,8 @@
   },
   {
     "id": 10,
+      "bild": "m10.png",
     "name": "Fizzlebean",
-    "emoji": "👻",
-    "bild": "fizzlebean.png",
     "eigenschaften": {
       "niedlichkeit": 65,
       "staerke": 60,
@@ -131,9 +129,8 @@
   },
   {
     "id": 11,
+    "bild": "m11.png",
     "name": "Ploppywink",
-    "emoji": "👁️🐸",
-    "bild": "ploppywink.png",
     "eigenschaften": {
       "niedlichkeit": 80,
       "staerke": 45,
@@ -144,9 +141,8 @@
   },
   {
     "id": 12,
+    "bild": "m12.png",
     "name": "Squishblop",
-    "emoji": "🪼",
-    "bild": "squishblop.png",
     "eigenschaften": {
       "niedlichkeit": 92,
       "staerke": 10,
@@ -156,5 +152,3 @@
     }
   }
 ]
-
-

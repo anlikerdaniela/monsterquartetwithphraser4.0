@@ -1,7 +1,4 @@
-// =====================
-// SÜSSE MONSTER QUARTETT
-// game.js
-// =====================
+
 
 let allMonsters = [];
 let playerDeck = [];
@@ -106,9 +103,9 @@ function buildCardHTML(monster, isPlayer) {
   return `
     <div class="card">
       <div class="card__header">
-        <span class="card__emoji">${monster.emoji}</span>
         <h2 class="card__name">${monster.name}</h2>
       </div>
+      <img class="card__image" src="pictures/${monster.bild}" alt="${monster.name}">
       <div class="card__stats">${rows}</div>
     </div>`;
 }
