@@ -399,7 +399,7 @@ header p {
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
 .btn--primary { background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: white; }
-.btn--secondary { background: var(--surface); color: var(--text); border: 2px solid var(--accent2); }
+.btn--secondary { background: var(--accent2); color: var(--text); border: 2px solid var(--accent2); }
 #next-btn { display: none; }
 
 /* ── End Overlay ── */
@@ -479,16 +479,31 @@ header p {
 }
 .start-box {
   text-align: center; padding: clamp(1.5rem, 4vmin, 3rem);
-  background: var(--surface); border-radius: var(--radius);
-  border: 2px solid var(--accent2); box-shadow: 0 0 60px rgba(167,139,250,0.3);
+  background: var(--surface); 
+  border-radius: var(--radius);
+  border: 2px solid var(--accent2); 
+  box-shadow: 0 0 60px rgba(167,139,250,0.3);
 }
-.start-monster { font-size: clamp(2.5rem, 8vmin, 5rem); animation: wobble 2s ease-in-out infinite; margin-bottom: 0.8rem; }
+.start-monster { font-size: clamp(2.5rem, 8vmin, 5rem); 
+  animation: wobble 2s ease-in-out infinite; margin-bottom: 0.8rem; }
 .start-title {
-  font-family: 'Fredoka One', cursive; font-size: clamp(1.3rem, 4vmin, 2.5rem);
+  font-family: 'Fredoka One', cursive; 
+  font-size: clamp(1.3rem, 4vmin, 2.5rem);
   background: linear-gradient(135deg, var(--accent1), var(--accent2));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  background-clip: text; 
+  margin-bottom: 0.5rem;
 }
-.start-sub { color: var(--text-muted); margin-bottom: 1.2rem; font-size: clamp(0.8rem, 2vmin, 1rem); }
+
+.start-text {
+  font-size: clamp(1rem, 2vmin, 1rem); 
+   color: var(--text-muted); 
+}
+
+.start-sub { color: var(--text-muted); 
+  margin-bottom: 1.2rem; 
+  font-size: clamp(1rem, 2vmin, 1rem); }
 .start-buttons { display: flex; flex-direction: column; gap: 0.8rem; }
 
 #rules-screen { width: min(100%, 430px); }
