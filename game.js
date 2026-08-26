@@ -17,6 +17,7 @@ let winStreakCount = 0;
 const MAX_WIN_STREAK = 4; // ab so vielen Siegen in Folge wechselt der Zug zwangsweise zur Gegenseite
 let totalMoney = 0;
 let gameMode = 'ai';
+let aiLevel = 1; // 1 = Spieler gewinnt tendenziell öfter, 2 = ca. 50/50
 let musicEnabled = false;
 const avatarPrices = {
   "avatar3.png": 50,
@@ -38,8 +39,9 @@ const eigenschaftLabels = {
 
 // ── Laden & Starten ──────────────────────────────────────────
 
-function startMode(mode) {
+function startMode(mode, level) {
   gameMode = mode;
+  if (mode === 'ai') aiLevel = level || 1;
   document.getElementById("start-screen").style.display = "none";
   closeSettings();
   startGame();
@@ -70,12 +72,15 @@ function startGame() {
     document.querySelector(".scoreboard .score-item:first-child span").textContent = "Player 1";
     document.querySelector(".scoreboard .score-item:last-child span").textContent = "Player 2";
     document.querySelector(".lives").style.display = "none";
+    document.querySelector("header p").textContent = "Choose your strongest ability and defeat your opponent!";
   } else {
     document.querySelector(".player-side .side-label").textContent = "👤 you";
     document.querySelector(".computer-side .side-label").textContent = "💻 computer";
     document.querySelector(".scoreboard .score-item:first-child span").textContent = "your cards";
     document.querySelector(".scoreboard .score-item:last-child span").textContent = "computer";
     document.querySelector(".lives").style.display = "flex";
+    document.querySelector("header p").textContent =
+      `Choose your strongest ability and defeat the computer! (Level ${aiLevel})`;
   }
 
   nextRound();
@@ -184,7 +189,27 @@ function computerChoose() {
   const bestKey = keys.reduce((a, b) =>
     computerCard.eigenschaften[a] > computerCard.eigenschaften[b] ? a : b
   );
-  chooseEigenschaft(bestKey);
+
+  let key;
+  if (aiLevel === 2) {
+    // Level 2: Der Computer wählt gelegentlich taktisch — das Merkmal, bei
+    // dem er im direkten Vergleich zur Spielerkarte am meisten vorne liegt
+    // — statt immer nur sein eigenes bestes Merkmal. Simulationen zeigen,
+    // dass eine niedrige Wahrscheinlichkeit dafür (statt "immer") die
+    // Gewinnchance auf ungefähr 50/50 bringt.
+    const smartKey = keys.reduce((a, b) =>
+      (computerCard.eigenschaften[a] - playerCard.eigenschaften[a]) >
+      (computerCard.eigenschaften[b] - playerCard.eigenschaften[b]) ? a : b
+    );
+    key = Math.random() < 0.075 ? smartKey : bestKey;
+  } else {
+    // Level 1: Der Computer nimmt fast immer sein eigenes bestes Merkmal,
+    // aber nicht ganz perfekt — das lässt den Spieler tendenziell öfter
+    // gewinnen (Zielquote ca. 2/3).
+    key = Math.random() < 0.965 ? bestKey : keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  chooseEigenschaft(key);
 }
 
 // ── Spiellogik ───────────────────────────────────────────────
