@@ -288,7 +288,15 @@ function chooseEigenschaft(key) {
   // Zähler, Kartenstapel-Optik und der "next round"-Button erscheinen.
   setTimeout(() => {
     if (loserSide) animateCardTransfer(loserSide);
-    setTimeout(finishRound, loserSide ? FLY_DURATION_MS : 0);
+    setTimeout(() => {
+      // Der Kartenplatz der Verliererseite ist jetzt leer (Karte weggeflogen) —
+      // dort wieder den Kartenrücken (Monster + "Monster Quartet") zeigen,
+      // statt ihn leer zu lassen, bis die nächste Runde gestartet wird.
+      if (loserSide) {
+        renderHidden(loserSide === "player" ? "player-card" : "computer-card");
+      }
+      finishRound();
+    }, loserSide ? FLY_DURATION_MS : 0);
   }, ROUND_PAUSE_MS);
 }
 
