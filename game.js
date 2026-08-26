@@ -15,6 +15,15 @@ let computerLives = 3;
 let totalMoney = 0;
 let gameMode = 'ai';
 let musicEnabled = false;
+const avatarPrices = {
+  "avatar3.png": 50,
+  "avatar4.png": 75,
+  "avatar5.png": 100,
+  "avatar6.png": 125,
+  "avatar7.png": 150,
+  "avatar8.png": 200
+};
+const ownedAvatars = new Set(['avatar1.png', 'avatar2.png']);
 
 const eigenschaftLabels = {
   niedlichkeit: "💖 Sweetness",
@@ -317,7 +326,15 @@ function updateLives() {
   });
 }
 
+function stopGameMusic() {
+  const audio = document.getElementById("game-music");
+  if (!audio) return;
+  audio.pause();
+  audio.currentTime = 0;
+}
+
 function endGame() {
+  stopGameMusic();
   const overlay = document.getElementById("end-overlay");
   if (gameMode === 'pvp') {
     const p1wins = computerDeck.length === 0;
@@ -330,9 +347,11 @@ function endGame() {
       document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
       document.getElementById("end-title").textContent = "🏆 You won!";
       document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
+      new Audio("audio/yipe.mp3").play();
     } else {
       document.getElementById("end-title").textContent = "💻 Computer wins!";
       document.getElementById("end-sub").textContent = "No lives left. Try again!";
+      new Audio("audio/adele.mp3").play();
     }
   }
   overlay.style.display = "flex";
@@ -355,6 +374,33 @@ function toggleSettings() {
 function selectAvatar(imageName) {
   document.querySelectorAll("[data-avatar-display]").forEach(display => {
     display.src = `pictures/${imageName}`;
+  });
+}
+
+function avatarAction(imageName) {
+    const price = avatarPrices[imageName];
+
+  if (!ownedAvatars.has(imageName)) {
+    if (totalMoney < price) {
+      document.getElementById("avatar-status").textContent = `You need ${price} coins to buy this avatar.`;
+      return;
+    }
+    totalMoney -= price;
+    ownedAvatars.add(imageName);
+    document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+  }
+
+  selectAvatar(imageName);
+  updateAvatarOptions();
+  document.getElementById("avatar-status").textContent = "Avatar selected.";
+}
+
+function updateAvatarOptions() {
+  document.querySelectorAll("[data-avatar]").forEach(button => {
+    const isOwned = ownedAvatars.has(button.dataset.avatar);
+    const price = avatarPrices[button.dataset.avatar];
+    button.classList.toggle("avatar-owned", isOwned);
+    button.querySelector(".avatar-lock").textContent = isOwned ? "✓" : `🔒 ${price}`;
   });
 }
 
@@ -386,4 +432,7 @@ function setMusicVolume(value) {
 
 // ── Start ────────────────────────────────────────────────────
 
-window.addEventListener("DOMContentLoaded", loadMonsters);
+window.addEventListener("DOMContentLoaded", () => {
+  loadMonsters();
+  updateAvatarOptions();
+});

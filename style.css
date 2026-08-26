@@ -441,11 +441,15 @@ header p {
 .settings-avatar { display: block; width: 56px; height: 56px; margin: 0 auto 0.5rem; object-fit: contain; }
 .settings-box .avatar-options { justify-content: center; }
 .settings-box .avatar-options button {
-  width: 42px; height: 42px; border: 0; background: transparent;
+  position: relative; width: 64px; height: 64px; flex: 0 0 64px; border: 0; background: transparent;
   color: inherit; cursor: pointer; padding: 0.25rem; border-radius: 0.5rem;
 }
 .settings-box .avatar-options button:hover { background: rgba(167,139,250,0.2); }
 .settings-box .avatar-options button img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.settings-box .avatar-options button:not(.avatar-owned) img { filter: grayscale(1); opacity: 0.55; }
+.avatar-lock { position: absolute; right: -8px; bottom: -7px; padding: 1px 3px; border-radius: 4px; background: var(--bg); color: var(--text-muted); font-size: 0.55rem; white-space: nowrap; }
+.avatar-owned .avatar-lock { color: var(--accent3); }
+.settings-box .avatar-options button img { transform: scale(1.25); }
 .settings-toggle {
   display: flex; align-items: center; justify-content: space-between;
   gap: 1rem; margin-top: 1.5rem; padding-top: 1rem;
@@ -662,8 +666,9 @@ header p {
 .settings-box .avatar-options { justify-content: center; }
 
 .settings-box .avatar-options button {
-  width: 42px;
-  height: 42px;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
   border: 0;
   background: transparent;
   color: inherit;
@@ -861,8 +866,9 @@ header p {
 .settings-box .avatar-options { justify-content: center; }
 
 .settings-box .avatar-options button {
-  width: 42px;
-  height: 42px;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
   border: 0;
   background: transparent;
   color: inherit;

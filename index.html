@@ -143,23 +143,16 @@
       <div class="settings-section">
         <h3>Avatar</h3>
         <img class="settings-avatar" data-avatar-display src="pictures/avatar1.png" alt="Selected avatar">
+        <p id="avatar-status" class="settings-note">Choose an avatar.</p>
         <div class="avatar-options">
-          <button type="button" onclick="selectAvatar('avatar1.png')"><img src="pictures/avatar1.png"
-              alt="Avatar 1"></button>
-          <button type="button" onclick="selectAvatar('avatar2.png')"><img src="pictures/avatar2.png"
-              alt="Avatar 2"></button>
-          <button type="button" onclick="selectAvatar('avatar3.png')"><img src="pictures/avatar3.png"
-              alt="Avatar 3"></button>
-          <button type="button" onclick="selectAvatar('avatar4.png')"><img src="pictures/avatar4.png"
-              alt="Avatar 4"></button>
-          <button type="button" onclick="selectAvatar('avatar5.png')"><img src="pictures/avatar5.png"
-              alt="Avatar 5"></button>
-          <button type="button" onclick="selectAvatar('avatar6.png')"><img src="pictures/avatar6.png"
-              alt="Avatar 6"></button>
-          <button type="button" onclick="selectAvatar('avatar7.png')"><img src="pictures/avatar7.png"
-              alt="Avatar 7"></button>
-          <button type="button" onclick="selectAvatar('avatar8.png')"><img src="pictures/avatar8.png"
-              alt="Avatar 8"></button>
+          <button type="button" data-avatar="avatar1.png" onclick="avatarAction('avatar1.png')"><img src="pictures/avatar1.png" alt="Avatar 1"><span class="avatar-lock">✓</span></button>
+          <button type="button" data-avatar="avatar2.png" onclick="avatarAction('avatar2.png')"><img src="pictures/avatar2.png" alt="Avatar 2"><span class="avatar-lock">✓</span></button>
+          <button type="button" data-avatar="avatar3.png" onclick="avatarAction('avatar3.png')"><img src="pictures/avatar3.png" alt="Avatar 3"><span class="avatar-lock">🔒 50</span></button>
+          <button type="button" data-avatar="avatar4.png" onclick="avatarAction('avatar4.png')"><img src="pictures/avatar4.png" alt="Avatar 4"><span class="avatar-lock">🔒 50</span></button>
+          <button type="button" data-avatar="avatar5.png" onclick="avatarAction('avatar5.png')"><img src="pictures/avatar5.png" alt="Avatar 5"><span class="avatar-lock">🔒 50</span></button>
+          <button type="button" data-avatar="avatar6.png" onclick="avatarAction('avatar6.png')"><img src="pictures/avatar6.png" alt="Avatar 6"><span class="avatar-lock">🔒 50</span></button>
+          <button type="button" data-avatar="avatar7.png" onclick="avatarAction('avatar7.png')"><img src="pictures/avatar7.png" alt="Avatar 7"><span class="avatar-lock">🔒 50</span></button>
+          <button type="button" data-avatar="avatar8.png" onclick="avatarAction('avatar8.png')"><img src="pictures/avatar8.png" alt="Avatar 8"><span class="avatar-lock">🔒 50</span></button>
         </div>
       </div>
 
