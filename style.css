@@ -496,6 +496,11 @@ header p {
   margin-bottom: 0.5rem;
 }
 
+.rules-inside {
+font-size: clamp(1rem, 2vmin, 1rem); 
+   color: var(--text-muted); 
+}
+
 .start-text {
   font-size: clamp(1rem, 2vmin, 1rem); 
    color: var(--text-muted); 
