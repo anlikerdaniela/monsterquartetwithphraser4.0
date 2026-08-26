@@ -12,6 +12,9 @@ let roundActive = false;
 let isPlayerTurn = true;
 let lives = 3;
 let computerLives = 3;
+let winStreakSide = null; // 'player' | 'computer' — wer gerade in Folge gewinnt
+let winStreakCount = 0;
+const MAX_WIN_STREAK = 4; // ab so vielen Siegen in Folge wechselt der Zug zwangsweise zur Gegenseite
 let totalMoney = 0;
 let gameMode = 'ai';
 let musicEnabled = false;
@@ -56,6 +59,8 @@ function startGame() {
   isPlayerTurn = true;
   lives = 3;
   computerLives = 3;
+  winStreakSide = null;
+  winStreakCount = 0;
   updateLives();
   updateScores();
 
@@ -212,8 +217,19 @@ function chooseEigenschaft(key) {
       "result-message--win"
     );
     playerDeck.push(playerCard, computerCard);
-    isPlayerTurn = true; // Gewinner wählt auch die nächste Runde
     loserSide = "computer";
+
+    // Gewinner wählt auch die nächste Runde — ausser er hat schon
+    // MAX_WIN_STREAK Mal in Folge gewonnen, dann kommt zwangsweise die
+    // andere Seite dran, damit niemand endlos am Zug bleibt.
+    if (winStreakSide === "player") winStreakCount++; else { winStreakSide = "player"; winStreakCount = 1; }
+    if (winStreakCount >= MAX_WIN_STREAK) {
+      isPlayerTurn = false;
+      winStreakSide = null;
+      winStreakCount = 0;
+    } else {
+      isPlayerTurn = true;
+    }
   } else if (computerVal > playerVal) {
     setMessage(
       gameMode === 'pvp'
@@ -222,13 +238,24 @@ function chooseEigenschaft(key) {
       "result-message--lose"
     );
     computerDeck.push(computerCard, playerCard);
-    isPlayerTurn = false; // Gewinner wählt auch die nächste Runde
     loserSide = "player";
+
+    if (winStreakSide === "computer") winStreakCount++; else { winStreakSide = "computer"; winStreakCount = 1; }
+    if (winStreakCount >= MAX_WIN_STREAK) {
+      isPlayerTurn = true;
+      winStreakSide = null;
+      winStreakCount = 0;
+    } else {
+      isPlayerTurn = false;
+    }
   } else {
     setMessage(`🤝 Draw! Both have ${playerVal}`, "result-message--draw");
     playerDeck.push(playerCard);
     computerDeck.push(computerCard);
-    // Bei Unentschieden bleibt die Wahl bei der gleichen Person, keine Karte wandert.
+    // Bei Unentschieden bleibt die Wahl bei der gleichen Person, keine Karte
+    // wandert, und die Siegesserie wird unterbrochen.
+    winStreakSide = null;
+    winStreakCount = 0;
   }
 
   // Erst kurz die aufgedeckten Karten vergleichen lassen, dann die
