@@ -186,28 +186,25 @@ function buildCardHTML(monster, isClickable) {
 
 function computerChoose() {
   const keys = Object.keys(computerCard.eigenschaften);
+
+  // "bestKey" = das eigene stärkste Merkmal (Standardstrategie).
+  // "smartKey" = das Merkmal, bei dem der Computer im direkten Vergleich zur
+  // sichtbaren Spielerkarte am meisten vorne liegt — eine deutlich stärkere,
+  // taktische Strategie.
   const bestKey = keys.reduce((a, b) =>
     computerCard.eigenschaften[a] > computerCard.eigenschaften[b] ? a : b
   );
+  const smartKey = keys.reduce((a, b) =>
+    (computerCard.eigenschaften[a] - playerCard.eigenschaften[a]) >
+    (computerCard.eigenschaften[b] - playerCard.eigenschaften[b]) ? a : b
+  );
 
-  let key;
-  if (aiLevel === 2) {
-    // Level 2: Der Computer wählt gelegentlich taktisch — das Merkmal, bei
-    // dem er im direkten Vergleich zur Spielerkarte am meisten vorne liegt
-    // — statt immer nur sein eigenes bestes Merkmal. Simulationen zeigen,
-    // dass eine niedrige Wahrscheinlichkeit dafür (statt "immer") die
-    // Gewinnchance auf ungefähr 50/50 bringt.
-    const smartKey = keys.reduce((a, b) =>
-      (computerCard.eigenschaften[a] - playerCard.eigenschaften[a]) >
-      (computerCard.eigenschaften[b] - playerCard.eigenschaften[b]) ? a : b
-    );
-    key = Math.random() < 0.075 ? smartKey : bestKey;
-  } else {
-    // Level 1: Der Computer nimmt fast immer sein eigenes bestes Merkmal,
-    // aber nicht ganz perfekt — das lässt den Spieler tendenziell öfter
-    // gewinnen (Zielquote ca. 2/3).
-    key = Math.random() < 0.965 ? bestKey : keys[Math.floor(Math.random() * keys.length)];
-  }
+  // Je öfter der Computer taktisch (smartKey) statt nur nach eigenem besten
+  // Merkmal spielt, desto seltener gewinnt der Spieler am Ende die ganze
+  // Partie. Diese Werte sind per Simulation kalibriert (Ziel Level 1: Spieler
+  // gewinnt ca. 90%, Level 2: ca. 70%).
+  const smartProb = aiLevel === 2 ? 0.47 : 0.09;
+  const key = Math.random() < smartProb ? smartKey : bestKey;
 
   chooseEigenschaft(key);
 }
