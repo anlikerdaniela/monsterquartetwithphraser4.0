@@ -24,13 +24,13 @@
       <p class="start-sub">Choose your game mode </p>
       <div class="start-buttons">
         <button class="btn btn--primary" onclick="startMode('ai', 1)">
-          🤖 Easy - Computer vs Player
+           Easy - Computer vs Player
         </button>
         <button class="btn btn--primary" onclick="startMode('ai', 2)">
-          🤖 Medium - Computer vs Player
+           Medium - Computer vs Player
         </button>
         <button class="btn btn--secondary" onclick="startMode('pvp')">
-          👥 Two Players
+           Two Players
         </button>
       </div>
     </div>
@@ -42,12 +42,21 @@
             <ul style="text-align: left; list-style-position: inside;">
             <ul style="text-align: left; list-style-position: inside;">
               <strong>Rules</strong>
+              <li>Cards are dealt equally.</li>
+              <li>Each player plays with their top card.</li>
+              <li>The active player picks an attribute.</li>
+              <li>Higher value wins the opponent's card.</li>
+              <li>Winner chooses again for next turn.</li>
+              <li>Goal: Win all the cards.</li>
+              <!--
+              
               <li>Cards are dealt evenly.</li>
               <li>Each player reveals their top card.</li>
               <li>The active player picks an attribute.</li>
               <li>Higher value wins the opponent's card.</li>
               <li>Winner chooses again next turn.</li>
               <li>After 3 wins, opponent gets to choose.</li>
+            -->
             </ul>
           </ul>
 
@@ -118,12 +127,12 @@
   <!-- Spielfeld -->
   <div class="arena">
     <div class="player-side">
-      <div class="side-label">👤 you</div>
+      <div class="side-label"> You</div>
       <div id="player-card"></div>
     </div>
 
     <div class="computer-side">
-      <div class="side-label">💻 computer</div>
+      <div class="side-label"> Computer</div>
       <div id="computer-card"></div>
     </div>
 
