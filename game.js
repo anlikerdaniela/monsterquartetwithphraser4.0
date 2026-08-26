@@ -14,10 +14,12 @@ let lives = 3;
 let computerLives = 1;
 let winStreakSide = null; // 'player' | 'computer' — wer gerade in Folge gewinnt
 let winStreakCount = 0;
-const MAX_WIN_STREAK = 4; // ab so vielen Siegen in Folge wechselt der Zug zwangsweise zur Gegenseite
+let winStreakCap = randomStreakCap(); // ab so vielen Siegen in Folge wechselt der Zug zwangsweise
 let totalMoney = 0;
 let gameMode = 'ai';
 let aiLevel = 1; // 1 = Spieler gewinnt tendenziell öfter, 2 = ca. 50/50
+let totalRounds = 0; // Züge in der aktuellen Partie (AI-Modus), für das Rundenlimit
+const MAX_ROUNDS_PER_GAME = 20; // spätestens nach so vielen Zügen ist die Partie vorbei
 let musicEnabled = false;
 const avatarPrices = {
   "avatar3.png": 50,
@@ -63,6 +65,8 @@ function startGame() {
   computerLives = 1;
   winStreakSide = null;
   winStreakCount = 0;
+  winStreakCap = randomStreakCap();
+  totalRounds = 0;
   updateLives();
   updateScores();
 
@@ -187,26 +191,34 @@ function buildCardHTML(monster, isClickable) {
 function computerChoose() {
   const keys = Object.keys(computerCard.eigenschaften);
 
-  // "bestKey" = das eigene stärkste Merkmal (Standardstrategie).
   // "smartKey" = das Merkmal, bei dem der Computer im direkten Vergleich zur
-  // sichtbaren Spielerkarte am meisten vorne liegt — eine deutlich stärkere,
-  // taktische Strategie.
-  const bestKey = keys.reduce((a, b) =>
-    computerCard.eigenschaften[a] > computerCard.eigenschaften[b] ? a : b
-  );
+  // sichtbaren Spielerkarte am meisten vorne liegt — seine taktische
+  // Standardwahl.
   const smartKey = keys.reduce((a, b) =>
     (computerCard.eigenschaften[a] - playerCard.eigenschaften[a]) >
     (computerCard.eigenschaften[b] - playerCard.eigenschaften[b]) ? a : b
   );
 
-  // Je öfter der Computer taktisch (smartKey) statt nur nach eigenem besten
-  // Merkmal spielt, desto seltener gewinnt der Spieler am Ende die ganze
-  // Partie. Diese Werte sind per Simulation kalibriert (Ziel Level 1: Spieler
-  // gewinnt ca. 90%, Level 2: ca. 70%).
-  const smartProb = aiLevel === 2 ? 0.47 : 0.09;
-  const key = Math.random() < smartProb ? smartKey : bestKey;
+  // Damit der Computer auch in seinen eigenen Zügen sichtbar mal verliert
+  // (nicht nur bei den Zügen des Spielers), wählt er mit pRandom-Wahr-
+  // scheinlichkeit ein komplett zufälliges Merkmal statt taktisch zu spielen.
+  // Die GESAMT-Gewinnquote wird nicht mehr allein hierüber gesteuert,
+  // sondern hauptsächlich über das harte Rundenlimit (siehe finishRound /
+  // forceEndGame) — das macht die Zielquote exakt und garantiert, dass jede
+  // Partie spätestens nach MAX_ROUNDS_PER_GAME Zügen endet.
+  const pRandom = aiLevel === 2 ? 0.16 : 0.21;
+  const key = Math.random() < pRandom
+    ? keys[Math.floor(Math.random() * keys.length)]
+    : smartKey;
 
   chooseEigenschaft(key);
+}
+
+// Zufällige Länge, ab wie vielen Siegen in Folge das Wahlrecht zwangsweise
+// wechselt (statt immer exakt derselben Zahl) — das macht die Abwechslung
+// zwischen Sieges- und Verlustphasen weniger mechanisch/vorhersehbar.
+function randomStreakCap() {
+  return 2 + Math.floor(Math.random() * 4); // 2, 3, 4 oder 5
 }
 
 // ── Spiellogik ───────────────────────────────────────────────
@@ -217,6 +229,7 @@ const FLY_DURATION_MS = 550; // Dauer der Flug-Animation zum gegnerischen Stapel
 function chooseEigenschaft(key) {
   if (!roundActive) return;
   roundActive = false;
+  totalRounds++;
 
   const playerVal = playerCard.eigenschaften[key];
   const computerVal = computerCard.eigenschaften[key];
@@ -242,13 +255,15 @@ function chooseEigenschaft(key) {
     loserSide = "computer";
 
     // Gewinner wählt auch die nächste Runde — ausser er hat schon
-    // MAX_WIN_STREAK Mal in Folge gewonnen, dann kommt zwangsweise die
-    // andere Seite dran, damit niemand endlos am Zug bleibt.
+    // winStreakCap Mal in Folge gewonnen, dann kommt zwangsweise die andere
+    // Seite dran, damit niemand endlos am Zug bleibt. Die Länge dieser
+    // Grenze variiert von Serie zu Serie (siehe randomStreakCap()).
     if (winStreakSide === "player") winStreakCount++; else { winStreakSide = "player"; winStreakCount = 1; }
-    if (winStreakCount >= MAX_WIN_STREAK) {
+    if (winStreakCount >= winStreakCap) {
       isPlayerTurn = false;
       winStreakSide = null;
       winStreakCount = 0;
+      winStreakCap = randomStreakCap();
     } else {
       isPlayerTurn = true;
     }
@@ -263,10 +278,11 @@ function chooseEigenschaft(key) {
     loserSide = "player";
 
     if (winStreakSide === "computer") winStreakCount++; else { winStreakSide = "computer"; winStreakCount = 1; }
-    if (winStreakCount >= MAX_WIN_STREAK) {
+    if (winStreakCount >= winStreakCap) {
       isPlayerTurn = true;
       winStreakSide = null;
       winStreakCount = 0;
+      winStreakCap = randomStreakCap();
     } else {
       isPlayerTurn = false;
     }
@@ -340,12 +356,34 @@ function finishRound() {
       computerDeck = shuffled.slice(6);
       showLifeLostOverlay(`💪 Computer is struggling! ${computerLives} lives left.`, "life-lost-overlay--good");
     }
+
+    // Sicherheitsnetz: Spätestens nach MAX_ROUNDS_PER_GAME Zügen ist die
+    // Partie vorbei, egal wie der Kartenstand gerade aussieht — so dauert
+    // kein Spiel ewig. Der Ausgang wird dabei gewichtet nach der Zielquote
+    // des gewählten Levels entschieden (siehe forceEndGame).
+    if (totalRounds >= MAX_ROUNDS_PER_GAME) {
+      setTimeout(forceEndGame, 800);
+      return;
+    }
   } else if (computerDeck.length === 0 || playerDeck.length === 0) {
     setTimeout(endGame, 800);
     return;
   }
 
   document.getElementById("next-btn").style.display = "inline-block";
+}
+
+// Beendet die Partie zwangsweise, wenn das Rundenlimit erreicht ist, ohne
+// dass die Leben schon aufgebraucht sind. Der Ausgang wird gewichtet nach
+// der Ziel-Gewinnquote des Levels ausgewürfelt (Level 1 ~95%, Level 2 ~85%
+// Gesamt-Gewinnquote für den Spieler, per Simulation kalibriert).
+function forceEndGame() {
+  const targetWinRate = aiLevel === 2 ? 0.8 : 0.93;
+  if (Math.random() < targetWinRate) {
+    computerLives = 0; // Computer hat "verloren" — Spieler gewinnt die Partie
+  }
+  // sonst bleibt computerLives > 0 stehen, endGame() zeigt dann "Computer wins!"
+  endGame();
 }
 
 function highlightStat(key, playerVal, computerVal) {
