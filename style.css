@@ -584,7 +584,6 @@ header p {
   font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
-  order: -1;
 }
 
 .settings-button:hover { background: var(--card-bg); }
