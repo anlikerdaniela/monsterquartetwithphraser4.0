@@ -11,7 +11,7 @@ let computerCard = null;
 let roundActive = false;
 let isPlayerTurn = true;
 let lives = 3;
-let computerLives = 3;
+let computerLives = 1;
 let winStreakSide = null; // 'player' | 'computer' — wer gerade in Folge gewinnt
 let winStreakCount = 0;
 const MAX_WIN_STREAK = 4; // ab so vielen Siegen in Folge wechselt der Zug zwangsweise zur Gegenseite
@@ -60,7 +60,7 @@ function startGame() {
   computerDeck = shuffled.slice(half);
   isPlayerTurn = true;
   lives = 3;
-  computerLives = 3;
+  computerLives = 1;
   winStreakSide = null;
   winStreakCount = 0;
   updateLives();
