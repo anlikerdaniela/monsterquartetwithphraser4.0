@@ -589,7 +589,7 @@ header p {
 .btn-snake {
   margin-top: 0.6rem;
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(0.8rem, 1.6vmin, 0.8rem);
+  font-size: clamp(1.1rem, 2.6vmin, 1.6rem);
   padding: 0.3rem 0.9rem;
   background: transparent; color: var(--text-muted);
   border: 2px solid var(--text-muted); border-radius: 99px;
