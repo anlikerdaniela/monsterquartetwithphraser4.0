@@ -139,7 +139,7 @@ function startGame() {
       `Choose your strongest ability and defeat the computer! (Level ${aiLevel})`;
   }
 
-  if (gameMode !== 'pvp') scheduleSnakeSurprise();
+  scheduleSnakeSurprise();
   nextRound();
 }
 
@@ -836,7 +836,7 @@ function endSnakeGame() {
     updateWallet();
   }
 
-  if (gameMode !== 'pvp') scheduleSnakeSurprise();
+  scheduleSnakeSurprise();
 }
 
 // ── Debug-Panel (nur im Testmodus) ──────────────────────────
