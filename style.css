@@ -583,13 +583,13 @@ header p {
   font-size: clamp(0.9rem, 1.8vmin, 1rem); }
 .start-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
 .start-buttons .btn {
-  font-size: 1rem;
+  font-size: 0.84rem;
   padding: clamp(0.4rem, 1.1vmin, 0.7rem) clamp(1.2rem, 3.2vmin, 2.3rem);
 }
 .btn-snake {
   margin-top: 0.6rem;
   font-family: 'Fredoka One', cursive;
-  font-size: 1rem;
+  font-size: 0.72rem;
   padding: 0.3rem 0.9rem;
   background: transparent; color: var(--text-muted);
   border: 2px solid var(--text-muted); border-radius: 99px;
@@ -599,6 +599,8 @@ header p {
 .btn-snake-icon { filter: grayscale(1); }
 
 .start-wallet { display: flex; justify-content: center; margin-top: 0.6rem; }
+.start-wallet .wallet-coin { font-size: 0.65rem; }
+.start-wallet .wallet-amount { font-size: 0.6rem; }
 
 /* ── Namenseingabe ── */
 #name-screen {
