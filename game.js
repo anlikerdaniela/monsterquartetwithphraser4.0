@@ -116,7 +116,7 @@ function startGame() {
       `Choose your strongest ability and defeat the computer! (Level ${aiLevel})`;
   }
 
-  scheduleSnakeSurprise();
+  if (gameMode !== 'pvp') scheduleSnakeSurprise();
   nextRound();
 }
 
@@ -789,7 +789,7 @@ function endSnakeGame() {
     document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
   }
 
-  scheduleSnakeSurprise();
+  if (gameMode !== 'pvp') scheduleSnakeSurprise();
 }
 
 // ── Start ────────────────────────────────────────────────────
