@@ -487,7 +487,7 @@ function stopGameMusic() {
 
 function endGame() {
   stopGameMusic();
-  if (snakeMoveInterval) endSnakeGame(); // schliesst das Popup und plant (kurz) neu
+  if (snakeMoveTimeout) endSnakeGame(); // schliesst das Popup und plant (kurz) neu
   stopSnakeSurprises(); // ...das wird hier sofort wieder verworfen
   const overlay = document.getElementById("end-overlay");
   if (gameMode === 'pvp') {
@@ -590,7 +590,9 @@ function setMusicVolume(value) {
 const SNAKE_GRID = 12;
 const SNAKE_CELL = 20; // Canvas 240x240 / 12 Felder
 const SNAKE_DURATION_MS = 10000;
-const SNAKE_TICK_MS = 160;
+const SNAKE_TICK_START_MS = 260; // ganz langsamer Start
+const SNAKE_TICK_MIN_MS = 110; // schneller Endwert
+const SNAKE_TICK_STEP_MS = 14; // wird pro gefressenem Stück etwas schneller
 const SNAKE_KEY_DIRS = {
   ArrowUp: { x: 0, y: -1 }, w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
   ArrowDown: { x: 0, y: 1 }, s: { x: 0, y: 1 }, S: { x: 0, y: 1 },
@@ -599,7 +601,7 @@ const SNAKE_KEY_DIRS = {
 };
 
 let snakeSurpriseTimeout = null;
-let snakeMoveInterval = null;
+let snakeMoveTimeout = null;
 let snakeCountdownInterval = null;
 let snakeEndTimeout = null;
 let snakeBody = [];
@@ -607,6 +609,7 @@ let snakeDir = { x: 1, y: 0 };
 let snakeNextDir = { x: 1, y: 0 };
 let snakeFood = { x: 0, y: 0 };
 let snakeScore = 0;
+let snakeTickMs = SNAKE_TICK_START_MS;
 let snakeKeyHandler = null;
 
 function scheduleSnakeSurprise() {
@@ -636,13 +639,17 @@ function trySnakeSurprise() {
   showSnakeGame();
 }
 
-function showSnakeGame() {
+// timed=true: Überraschungs-Popup während der Partie, schliesst nach
+// SNAKE_DURATION_MS automatisch. timed=false: manuell über den "Play Snake"-
+// Button vom Startbildschirm gestartet, läuft unbegrenzt bis zum "x".
+function showSnakeGame(timed = true) {
   const overlay = document.getElementById("snake-overlay");
   overlay.classList.add("open");
   overlay.setAttribute("aria-hidden", "false");
 
   resetSnakeBody();
   snakeScore = 0;
+  snakeTickMs = SNAKE_TICK_START_MS;
   document.getElementById("snake-score").textContent = "0";
   placeSnakeFood();
   drawSnake();
@@ -656,17 +663,20 @@ function showSnakeGame() {
   };
   window.addEventListener("keydown", snakeKeyHandler);
 
-  snakeMoveInterval = setInterval(stepSnake, SNAKE_TICK_MS);
+  scheduleSnakeTick();
 
-  let remaining = Math.round(SNAKE_DURATION_MS / 1000);
   const timerEl = document.getElementById("snake-timer");
-  timerEl.textContent = `${remaining}s`;
-  snakeCountdownInterval = setInterval(() => {
-    remaining--;
-    timerEl.textContent = `${Math.max(remaining, 0)}s`;
-  }, 1000);
-
-  snakeEndTimeout = setTimeout(endSnakeGame, SNAKE_DURATION_MS);
+  if (timed) {
+    let remaining = Math.round(SNAKE_DURATION_MS / 1000);
+    timerEl.textContent = `${remaining}s`;
+    snakeCountdownInterval = setInterval(() => {
+      remaining--;
+      timerEl.textContent = `${Math.max(remaining, 0)}s`;
+    }, 1000);
+    snakeEndTimeout = setTimeout(endSnakeGame, SNAKE_DURATION_MS);
+  } else {
+    timerEl.textContent = "";
+  }
 }
 
 function resetSnakeBody() {
@@ -674,6 +684,15 @@ function resetSnakeBody() {
   snakeBody = [{ x: mid - 1, y: mid }, { x: mid - 2, y: mid }, { x: mid - 3, y: mid }];
   snakeDir = { x: 1, y: 0 };
   snakeNextDir = { x: 1, y: 0 };
+}
+
+// Statt festem setInterval plant jeder Tick den nächsten selbst neu, damit
+// sich snakeTickMs (Geschwindigkeit) zwischendurch ändern kann.
+function scheduleSnakeTick() {
+  snakeMoveTimeout = setTimeout(() => {
+    stepSnake();
+    scheduleSnakeTick();
+  }, snakeTickMs);
 }
 
 function placeSnakeFood() {
@@ -703,6 +722,7 @@ function stepSnake() {
   if (head.x === snakeFood.x && head.y === snakeFood.y) {
     snakeScore++;
     document.getElementById("snake-score").textContent = String(snakeScore);
+    snakeTickMs = Math.max(SNAKE_TICK_MIN_MS, snakeTickMs - SNAKE_TICK_STEP_MS);
     placeSnakeFood();
   } else {
     snakeBody.pop();
@@ -726,10 +746,10 @@ function drawSnake() {
 }
 
 function endSnakeGame() {
-  clearInterval(snakeMoveInterval);
+  clearTimeout(snakeMoveTimeout);
   clearInterval(snakeCountdownInterval);
   clearTimeout(snakeEndTimeout);
-  snakeMoveInterval = null;
+  snakeMoveTimeout = null;
   snakeCountdownInterval = null;
   snakeEndTimeout = null;
   if (snakeKeyHandler) {
