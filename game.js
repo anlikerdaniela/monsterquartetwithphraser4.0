@@ -98,17 +98,17 @@ function startGame() {
   updateScores();
 
   if (gameMode === 'pvp') {
-    document.querySelector(".player-side .side-label").textContent = `👤 ${player1Name}`;
-    document.querySelector(".computer-side .side-label").textContent = `👤 ${player2Name}`;
+    document.querySelector(".player-side .side-label").textContent = player1Name;
+    document.querySelector(".computer-side .side-label").textContent = player2Name;
     document.querySelector(".scoreboard .score-item:first-child span").textContent = player1Name;
     document.querySelector(".scoreboard .score-item:last-child span").textContent = player2Name;
     document.querySelector(".lives").style.display = "none";
     document.querySelector("header p").textContent = "Choose your strongest ability and defeat your opponent!";
   } else {
-    document.querySelector(".player-side .side-label").textContent = `👤 ${playerName}`;
-    document.querySelector(".computer-side .side-label").textContent = "💻 computer";
+    document.querySelector(".player-side .side-label").textContent = playerName;
+    document.querySelector(".computer-side .side-label").textContent = "Computer";
     document.querySelector(".scoreboard .score-item:first-child span").textContent = "your cards";
-    document.querySelector(".scoreboard .score-item:last-child span").textContent = "computer";
+    document.querySelector(".scoreboard .score-item:last-child span").textContent = "Computer";
     document.querySelector(".lives").style.display = "flex";
     document.querySelector("header p").textContent =
       `Choose your strongest ability and defeat the computer! (Level ${aiLevel})`;
@@ -139,12 +139,12 @@ function nextRound() {
       // Player 1 dran: linke Karte klickbar, rechte versteckt
       renderCard("player-card", playerCard, true);
       renderHidden("computer-card");
-      setMessage(`👤 ${player1Name} — Choose a property!`, "result-message--prompt");
+      setMessage(`${player1Name} — Choose a property!`, "result-message--prompt");
     } else {
       // Player 2 dran: linke Karte versteckt, rechte klickbar
       renderHidden("player-card");
       renderCard("computer-card", computerCard, true);
-      setMessage(`👤 ${player2Name} — Choose a property!`, "result-message--prompt");
+      setMessage(`${player2Name} — Choose a property!`, "result-message--prompt");
     }
   } else {
     renderCard("player-card", playerCard, isPlayerTurn);
