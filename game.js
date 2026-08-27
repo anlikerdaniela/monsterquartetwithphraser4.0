@@ -14,7 +14,7 @@ let lives = 3;
 let computerLives = 1;
 let winStreakSide = null; // 'player' | 'computer' — wer gerade in Folge gewinnt
 let winStreakCount = 0;
-let winStreakCap = randomStreakCap(); // ab so vielen Siegen in Folge wechselt der Zug zwangsweise
+const WIN_STREAK_LIMIT = 3; // ab so vielen Siegen in Folge bekommt die Seite gezielt eine schlechtere Karte
 let totalMoney = 0;
 let gameMode = 'ai';
 let aiLevel = 1; // 1 = Spieler gewinnt tendenziell öfter, 2 = ca. 50/50
@@ -65,7 +65,6 @@ function startGame() {
   computerLives = 1;
   winStreakSide = null;
   winStreakCount = 0;
-  winStreakCap = randomStreakCap();
   totalRounds = 0;
   updateLives();
   updateScores();
@@ -199,6 +198,20 @@ function computerChoose() {
     (computerCard.eigenschaften[b] - playerCard.eigenschaften[b]) ? a : b
   );
 
+  // Spielt der Computer gerade seine Ausgleichsrunde nach WIN_STREAK_LIMIT
+  // Siegen in Folge, wählt er absichtlich sein SCHWÄCHSTES Merkmal statt
+  // taktisch zu spielen — sonst würde smartKey genau die Karten-Sabotage
+  // (bringWorstMatchupToFront) wieder zunichtemachen, da beide dieselbe
+  // Differenz-Metrik nutzen.
+  if (winStreakSide === "computer" && winStreakCount >= WIN_STREAK_LIMIT) {
+    const worstKey = keys.reduce((a, b) =>
+      (computerCard.eigenschaften[a] - playerCard.eigenschaften[a]) <
+      (computerCard.eigenschaften[b] - playerCard.eigenschaften[b]) ? a : b
+    );
+    chooseEigenschaft(worstKey);
+    return;
+  }
+
   // Damit der Computer auch in seinen eigenen Zügen sichtbar mal verliert
   // (nicht nur bei den Zügen des Spielers), wählt er mit pRandom-Wahr-
   // scheinlichkeit ein komplett zufälliges Merkmal statt taktisch zu spielen.
@@ -212,13 +225,6 @@ function computerChoose() {
     : smartKey;
 
   chooseEigenschaft(key);
-}
-
-// Zufällige Länge, ab wie vielen Siegen in Folge das Wahlrecht zwangsweise
-// wechselt (statt immer exakt derselben Zahl) — das macht die Abwechslung
-// zwischen Sieges- und Verlustphasen weniger mechanisch/vorhersehbar.
-function randomStreakCap() {
-  return 2 + Math.floor(Math.random() * 4); // 2, 3, 4 oder 5
 }
 
 // ── Spiellogik ───────────────────────────────────────────────
@@ -253,19 +259,16 @@ function chooseEigenschaft(key) {
     );
     playerDeck.push(playerCard, computerCard);
     loserSide = "computer";
+    isPlayerTurn = true; // Gewinner wählt auch die nächste Runde
 
-    // Gewinner wählt auch die nächste Runde — ausser er hat schon
-    // winStreakCap Mal in Folge gewonnen, dann kommt zwangsweise die andere
-    // Seite dran, damit niemand endlos am Zug bleibt. Die Länge dieser
-    // Grenze variiert von Serie zu Serie (siehe randomStreakCap()).
     if (winStreakSide === "player") winStreakCount++; else { winStreakSide = "player"; winStreakCount = 1; }
-    if (winStreakCount >= winStreakCap) {
-      isPlayerTurn = false;
-      winStreakSide = null;
-      winStreakCount = 0;
-      winStreakCap = randomStreakCap();
-    } else {
-      isPlayerTurn = true;
+    if (winStreakCount >= WIN_STREAK_LIMIT) {
+      // Nach WIN_STREAK_LIMIT Siegen in Folge sorgt die KI dafür, dass die
+      // nächste Spielerkarte gegenüber der aktuellen Computerkarte
+      // möglichst in JEDER Eigenschaft unterlegen ist — der Spieler wählt
+      // zwar weiterhin frei, verliert die Runde mit echten Werten aber
+      // so gut wie sicher.
+      bringWorstMatchupToFront(playerDeck, computerDeck[0]);
     }
   } else if (computerVal > playerVal) {
     setMessage(
@@ -276,15 +279,13 @@ function chooseEigenschaft(key) {
     );
     computerDeck.push(computerCard, playerCard);
     loserSide = "player";
+    isPlayerTurn = false; // Gewinner wählt auch die nächste Runde
 
     if (winStreakSide === "computer") winStreakCount++; else { winStreakSide = "computer"; winStreakCount = 1; }
-    if (winStreakCount >= winStreakCap) {
-      isPlayerTurn = true;
-      winStreakSide = null;
-      winStreakCount = 0;
-      winStreakCap = randomStreakCap();
-    } else {
-      isPlayerTurn = false;
+    if (winStreakCount >= WIN_STREAK_LIMIT) {
+      // Gleiches Prinzip umgekehrt: der Computer bekommt gezielt seine
+      // schwächste Karte gegenüber der aktuellen Spielerkarte.
+      bringWorstMatchupToFront(computerDeck, playerDeck[0]);
     }
   } else {
     setMessage(`🤝 Draw! Both have ${playerVal}`, "result-message--draw");
@@ -384,6 +385,32 @@ function forceEndGame() {
   }
   // sonst bleibt computerLives > 0 stehen, endGame() zeigt dann "Computer wins!"
   endGame();
+}
+
+// Sucht in "deck" die Karte, die gegenüber "opponentCard" am schlechtesten
+// dasteht — idealerweise eine, die in JEDER Eigenschaft unterlegen ist —
+// und verschiebt sie an die Deckspitze. Verändert keine Werte, nur die
+// Reihenfolge der echten Karten, damit die nächste Runde mit ehrlichen
+// Zahlen sehr wahrscheinlich gegen "deck" ausgeht.
+function bringWorstMatchupToFront(deck, opponentCard) {
+  if (deck.length < 2 || !opponentCard) return;
+  let worstIndex = 0;
+  let worstBestAdvantage = Infinity;
+  deck.forEach((card, index) => {
+    const bestAdvantage = Math.max(
+      ...Object.keys(card.eigenschaften).map(
+        key => card.eigenschaften[key] - opponentCard.eigenschaften[key]
+      )
+    );
+    if (bestAdvantage < worstBestAdvantage) {
+      worstBestAdvantage = bestAdvantage;
+      worstIndex = index;
+    }
+  });
+  if (worstIndex > 0) {
+    const [worstCard] = deck.splice(worstIndex, 1);
+    deck.unshift(worstCard);
+  }
 }
 
 function highlightStat(key, playerVal, computerVal) {
