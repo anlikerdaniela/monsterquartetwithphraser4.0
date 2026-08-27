@@ -534,7 +534,7 @@ function selectAvatar(imageName) {
 }
 
 function avatarAction(imageName) {
-    const price = avatarPrices[imageName];
+  const price = avatarPrices[imageName];
 
   if (!ownedAvatars.has(imageName)) {
     if (totalMoney < price) {
