@@ -172,7 +172,6 @@ function buildCardHTML(monster, isClickable) {
            data-key="${key}">
         <span class="stat-label">${eigenschaftLabels[key]}</span>
         <span class="stat-value">${val}</span>
-        <div class="stat-bar"><div class="stat-bar__fill" style="width:${val}%"></div></div>
       </div>`).join("");
 
   return `

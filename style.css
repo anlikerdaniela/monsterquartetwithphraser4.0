@@ -354,15 +354,6 @@ header p {
   color: var(--accent1);
   line-height: 1.2;
 }
-.stat-bar {
-  grid-column: 1 / -1;
-  height: 4px;
-  height: clamp(3px, 1.4cqi, 8px);
-  background: rgba(255,255,255,0.1); border-radius: 99px;
-  margin-top: 0.15rem; overflow: hidden;
-}
-.stat-bar__fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent2), var(--accent1)); transition: width 0.6s ease; }
-
 /* ── Ergebnis ── */
 .result-area {
   text-align: center;

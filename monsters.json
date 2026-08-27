@@ -1,92 +1,86 @@
 [
   {
     "id": 1,
-        "bild": "m1.png",
-
+    "bild": "m1.png",
     "name": "Fluffmunch",
     "eigenschaften": {
       "niedlichkeit": 95,
-      "staerke": 30,
-      "geschwindigkeit": 50,
-      "magie": 80,
-      "hunger": 70
+      "staerke": 3,
+      "geschwindigkeit": 500,
+      "magie": 40,
+      "hunger": 4
     }
   },
   {
     "id": 2,
     "bild": "m2.png",
-        "name": "Bubblewump",
-
+    "name": "Bubblewump",
     "eigenschaften": {
       "niedlichkeit": 85,
-      "staerke": 20,
-      "geschwindigkeit": 90,
-      "magie": 60,
-      "hunger": 40
+      "staerke": 2,
+      "geschwindigkeit": 900,
+      "magie": 30,
+      "hunger": 2
     }
   },
   {
     "id": 3,
     "bild": "m3.png",
-        "name": "Snorkelblob",
-
+    "name": "Snorkelblob",
     "eigenschaften": {
       "niedlichkeit": 70,
-      "staerke": 75,
-      "geschwindigkeit": 25,
-      "magie": 50,
-      "hunger": 90
+      "staerke": 8,
+      "geschwindigkeit": 250,
+      "magie": 25,
+      "hunger": 5
     }
   },
   {
     "id": 4,
     "bild": "m4.png",
-        "name": "Glimmerzap",
-
+    "name": "Glimmerzap",
     "eigenschaften": {
       "niedlichkeit": 60,
-      "staerke": 50,
-      "geschwindigkeit": 70,
-      "magie": 99,
-      "hunger": 30
+      "staerke": 5,
+      "geschwindigkeit": 700,
+      "magie": 50,
+      "hunger": 2
     }
   },
   {
     "id": 5,
     "bild": "m5.png",
-        "name": "Wobblegloop",
-
+    "name": "Wobblegloop",
     "eigenschaften": {
       "niedlichkeit": 90,
-      "staerke": 40,
-      "geschwindigkeit": 35,
-      "magie": 45,
-      "hunger": 95
+      "staerke": 4,
+      "geschwindigkeit": 350,
+      "magie": 23,
+      "hunger": 5
     }
   },
   {
     "id": 6,
     "bild": "m6.png",
-        "name": "Spikelump",
-
+    "name": "Spikelump",
     "eigenschaften": {
       "niedlichkeit": 75,
-      "staerke": 85,
-      "geschwindigkeit": 60,
-      "magie": 30,
-      "hunger": 55
+      "staerke": 9,
+      "geschwindigkeit": 600,
+      "magie": 15,
+      "hunger": 3
     }
   },
   {
     "id": 7,
     "bild": "m7.png",
-        "name": "Twinklepuff",
+    "name": "Twinklepuff",
     "eigenschaften": {
       "niedlichkeit": 99,
-      "staerke": 15,
-      "geschwindigkeit": 80,
-      "magie": 75,
-      "hunger": 25
+      "staerke": 2,
+      "geschwindigkeit": 800,
+      "magie": 38,
+      "hunger": 1
     }
   },
   {
@@ -95,36 +89,34 @@
     "name": "Grumblesnout",
     "eigenschaften": {
       "niedlichkeit": 40,
-      "staerke": 95,
-      "geschwindigkeit": 45,
-      "magie": 20,
-      "hunger": 85
+      "staerke": 10,
+      "geschwindigkeit": 450,
+      "magie": 10,
+      "hunger": 4
     }
   },
   {
     "id": 9,
-    
-
     "bild": "m9.png",
     "name": "Cuddlezorp",
     "eigenschaften": {
       "niedlichkeit": 88,
-      "staerke": 35,
-      "geschwindigkeit": 40,
-      "magie": 55,
-      "hunger": 65
+      "staerke": 4,
+      "geschwindigkeit": 400,
+      "magie": 28,
+      "hunger": 3
     }
   },
   {
     "id": 10,
-      "bild": "m10.png",
+    "bild": "m10.png",
     "name": "Fizzlebean",
     "eigenschaften": {
       "niedlichkeit": 65,
-      "staerke": 60,
-      "geschwindigkeit": 85,
-      "magie": 40,
-      "hunger": 50
+      "staerke": 6,
+      "geschwindigkeit": 850,
+      "magie": 20,
+      "hunger": 3
     }
   },
   {
@@ -133,10 +125,10 @@
     "name": "Ploppywink",
     "eigenschaften": {
       "niedlichkeit": 80,
-      "staerke": 45,
-      "geschwindigkeit": 65,
-      "magie": 70,
-      "hunger": 60
+      "staerke": 5,
+      "geschwindigkeit": 650,
+      "magie": 35,
+      "hunger": 3
     }
   },
   {
@@ -145,10 +137,10 @@
     "name": "Squishblop",
     "eigenschaften": {
       "niedlichkeit": 92,
-      "staerke": 10,
-      "geschwindigkeit": 55,
-      "magie": 88,
-      "hunger": 45
+      "staerke": 1,
+      "geschwindigkeit": 550,
+      "magie": 44,
+      "hunger": 2
     }
   }
 ]
