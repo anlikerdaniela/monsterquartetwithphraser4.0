@@ -393,8 +393,9 @@ function finishRound() {
       updateLives();
       if (lives <= 0) { setTimeout(endGame, 800); return; }
       const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
-      playerDeck = shuffled.slice(0, 6);
-      computerDeck = shuffled.slice(6);
+      const half = Math.floor(shuffled.length / 2);
+      playerDeck = shuffled.slice(0, half);
+      computerDeck = shuffled.slice(half);
       showLifeLostOverlay(`💔 Life lost! ${lives} lives remaining.`);
     } else if (computerDeck.length === 0) {
       // Der Computer braucht genauso viele Leben wie der Spieler, sonst
@@ -404,8 +405,9 @@ function finishRound() {
       computerLives--;
       if (computerLives <= 0) { setTimeout(endGame, 800); return; }
       const shuffled = [...allMonsters].sort(() => Math.random() - 0.5);
-      playerDeck = shuffled.slice(0, 6);
-      computerDeck = shuffled.slice(6);
+      const half = Math.floor(shuffled.length / 2);
+      playerDeck = shuffled.slice(0, half);
+      computerDeck = shuffled.slice(half);
       showLifeLostOverlay(`💪 Computer is struggling! ${computerLives} lives left.`, "life-lost-overlay--good");
     }
 
@@ -506,6 +508,16 @@ function stopGameMusic() {
   audio.currentTime = 0;
 }
 
+// Ein noch laufender Sieg-/Niederlage-Sound wird gestoppt, bevor der nächste
+// startet — sonst überlagern sich beide, wenn kurz hintereinander mehrere
+// Partien enden (z.B. im Testmodus über die Force-Win/-Lose-Buttons).
+let endGameSound = null;
+function playEndSound(src) {
+  if (endGameSound) { endGameSound.pause(); endGameSound.currentTime = 0; }
+  endGameSound = new Audio(src);
+  endGameSound.play();
+}
+
 function endGame() {
   stopGameMusic();
   if (snakeMoveTimeout) endSnakeGame(); // schliesst das Popup und plant (kurz) neu
@@ -522,11 +534,11 @@ function endGame() {
       document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
       document.getElementById("end-title").textContent = playerName === "You" ? "🏆 You won!" : `🏆 ${playerName} won!`;
       document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
-      new Audio("audio/yipe.mp3").play();
+      playEndSound("audio/yipe.mp3");
     } else {
       document.getElementById("end-title").textContent = "💻 Computer wins!";
       document.getElementById("end-sub").textContent = "No lives left. Try again!";
-      new Audio("audio/adele.mp3").play();
+      playEndSound("audio/adele.mp3");
     }
   }
   overlay.style.display = "flex";
