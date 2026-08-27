@@ -10,7 +10,9 @@ let playerCard = null;
 let computerCard = null;
 let roundActive = false;
 let isPlayerTurn = true;
-let lives = 3;
+const MAX_LIVES = 3;
+const LIFE_PRICE = 300;
+let lives = MAX_LIVES;
 let computerLives = 1;
 let winStreakSide = null; // 'player' | 'computer' — wer gerade in Folge gewinnt
 let winStreakCount = 0;
@@ -89,7 +91,7 @@ function startGame() {
   playerDeck = shuffled.slice(0, half);
   computerDeck = shuffled.slice(half);
   isPlayerTurn = true;
-  lives = 3;
+  lives = MAX_LIVES;
   computerLives = 1;
   winStreakSide = null;
   winStreakCount = 0;
@@ -556,6 +558,27 @@ function updateAvatarOptions() {
     button.classList.toggle("avatar-owned", isOwned);
     button.querySelector(".avatar-lock").textContent = isOwned ? "✓" : `🔒 ${price}`;
   });
+}
+
+function buyLife() {
+  const status = document.getElementById("lives-status");
+  if (gameMode === 'pvp') {
+    status.textContent = "Lives aren't used in Two Players mode.";
+    return;
+  }
+  if (lives >= MAX_LIVES) {
+    status.textContent = "You already have full lives.";
+    return;
+  }
+  if (totalMoney < LIFE_PRICE) {
+    status.textContent = `You need $${LIFE_PRICE} to buy a life.`;
+    return;
+  }
+  totalMoney -= LIFE_PRICE;
+  lives++;
+  updateLives();
+  document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+  status.textContent = "❤️ Life purchased!";
 }
 
 function closeSettings() {
