@@ -21,6 +21,11 @@ let aiLevel = 1; // 1 = Spieler gewinnt tendenziell öfter, 2 = ca. 50/50
 let totalRounds = 0; // Züge in der aktuellen Partie (AI-Modus), für das Rundenlimit
 const MAX_ROUNDS_PER_GAME = 20; // spätestens nach so vielen Zügen ist die Partie vorbei
 let musicEnabled = false;
+let playerName = "You";
+let player1Name = "Player 1";
+let player2Name = "Player 2";
+let pendingMode = null;
+let pendingLevel = 1;
 const avatarPrices = {
   "avatar3.png": 50,
   "avatar4.png": 75,
@@ -42,10 +47,33 @@ const eigenschaftLabels = {
 // ── Laden & Starten ──────────────────────────────────────────
 
 function startMode(mode, level) {
-  gameMode = mode;
-  if (mode === 'ai') aiLevel = level || 1;
+  pendingMode = mode;
+  pendingLevel = level || 1;
   document.getElementById("start-screen").style.display = "none";
   closeSettings();
+  showNameScreen(mode);
+}
+
+function showNameScreen(mode) {
+  const isPvp = mode === 'pvp';
+  document.getElementById("name-fields-single").style.display = isPvp ? "none" : "flex";
+  document.getElementById("name-fields-pvp").style.display = isPvp ? "flex" : "none";
+  document.getElementById("input-name-you").value = playerName === "You" ? "" : playerName;
+  document.getElementById("input-name-p1").value = player1Name === "Player 1" ? "" : player1Name;
+  document.getElementById("input-name-p2").value = player2Name === "Player 2" ? "" : player2Name;
+  document.getElementById("name-screen").style.display = "flex";
+}
+
+function confirmNames() {
+  if (pendingMode === 'pvp') {
+    player1Name = document.getElementById("input-name-p1").value.trim() || "Player 1";
+    player2Name = document.getElementById("input-name-p2").value.trim() || "Player 2";
+  } else {
+    playerName = document.getElementById("input-name-you").value.trim() || "You";
+  }
+  gameMode = pendingMode;
+  if (gameMode === 'ai') aiLevel = pendingLevel;
+  document.getElementById("name-screen").style.display = "none";
   startGame();
 }
 
@@ -70,14 +98,14 @@ function startGame() {
   updateScores();
 
   if (gameMode === 'pvp') {
-    document.querySelector(".player-side .side-label").textContent = "👤 Player 1";
-    document.querySelector(".computer-side .side-label").textContent = "👤 Player 2";
-    document.querySelector(".scoreboard .score-item:first-child span").textContent = "Player 1";
-    document.querySelector(".scoreboard .score-item:last-child span").textContent = "Player 2";
+    document.querySelector(".player-side .side-label").textContent = `👤 ${player1Name}`;
+    document.querySelector(".computer-side .side-label").textContent = `👤 ${player2Name}`;
+    document.querySelector(".scoreboard .score-item:first-child span").textContent = player1Name;
+    document.querySelector(".scoreboard .score-item:last-child span").textContent = player2Name;
     document.querySelector(".lives").style.display = "none";
     document.querySelector("header p").textContent = "Choose your strongest ability and defeat your opponent!";
   } else {
-    document.querySelector(".player-side .side-label").textContent = "👤 you";
+    document.querySelector(".player-side .side-label").textContent = `👤 ${playerName}`;
     document.querySelector(".computer-side .side-label").textContent = "💻 computer";
     document.querySelector(".scoreboard .score-item:first-child span").textContent = "your cards";
     document.querySelector(".scoreboard .score-item:last-child span").textContent = "computer";
@@ -111,18 +139,18 @@ function nextRound() {
       // Player 1 dran: linke Karte klickbar, rechte versteckt
       renderCard("player-card", playerCard, true);
       renderHidden("computer-card");
-      setMessage("👤 Player 1 — Choose a property!", "result-message--prompt");
+      setMessage(`👤 ${player1Name} — Choose a property!`, "result-message--prompt");
     } else {
       // Player 2 dran: linke Karte versteckt, rechte klickbar
       renderHidden("player-card");
       renderCard("computer-card", computerCard, true);
-      setMessage("👤 Player 2 — Choose a property!", "result-message--prompt");
+      setMessage(`👤 ${player2Name} — Choose a property!`, "result-message--prompt");
     }
   } else {
     renderCard("player-card", playerCard, isPlayerTurn);
     if (isPlayerTurn) {
       renderHidden("computer-card");
-      setMessage("Choose a property!", "result-message--prompt");
+      setMessage(playerName === "You" ? "Choose a property!" : `${playerName}, choose a property!`, "result-message--prompt");
     } else {
       renderHidden("computer-card", "Computer is choosing...", true);
       setMessage("");
@@ -250,10 +278,11 @@ function chooseEigenschaft(key) {
   let loserSide = null;
 
   if (playerVal > computerVal) {
+    const winLead = gameMode === 'pvp'
+      ? `🎉 ${player1Name} wins!`
+      : (playerName === "You" ? "🎉 You win!" : `🎉 ${playerName} wins!`);
     setMessage(
-      gameMode === 'pvp'
-        ? `🎉 Player 1 wins! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`
-        : `🎉 You win! ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`,
+      `${winLead} ${eigenschaftLabels[key]}: ${playerVal} > ${computerVal}`,
       "result-message--win"
     );
     playerDeck.push(playerCard, computerCard);
@@ -270,10 +299,11 @@ function chooseEigenschaft(key) {
       bringWorstMatchupToFront(playerDeck, computerDeck[0]);
     }
   } else if (computerVal > playerVal) {
+    const loseLead = gameMode === 'pvp'
+      ? `🎉 ${player2Name} wins!`
+      : (playerName === "You" ? "😢 Computer wins! You lost a life" : `😢 Computer wins! ${playerName} lost a life`);
     setMessage(
-      gameMode === 'pvp'
-        ? `🎉 Player 2 wins! ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`
-        : `😢 Computer wins! You lost a life ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`,
+      `${loseLead} ${eigenschaftLabels[key]}: ${computerVal} > ${playerVal}`,
       "result-message--lose"
     );
     computerDeck.push(computerCard, playerCard);
@@ -459,14 +489,14 @@ function endGame() {
   const overlay = document.getElementById("end-overlay");
   if (gameMode === 'pvp') {
     const p1wins = computerDeck.length === 0;
-    document.getElementById("end-title").textContent = p1wins ? "🏆 Player 1 wins!" : "🏆 Player 2 wins!";
+    document.getElementById("end-title").textContent = p1wins ? `🏆 ${player1Name} wins!` : `🏆 ${player2Name} wins!`;
     document.getElementById("end-sub").textContent = "Great game!";
   } else {
     const isWin = computerLives <= 0;
     if (isWin) {
       totalMoney += 100;
       document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
-      document.getElementById("end-title").textContent = "🏆 You won!";
+      document.getElementById("end-title").textContent = playerName === "You" ? "🏆 You won!" : `🏆 ${playerName} won!`;
       document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
       new Audio("audio/yipe.mp3").play();
     } else {

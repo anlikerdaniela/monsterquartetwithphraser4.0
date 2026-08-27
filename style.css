@@ -502,6 +502,26 @@ font-size: clamp(1rem, 2vmin, 1rem);
   font-size: clamp(1rem, 2vmin, 1rem); }
 .start-buttons { display: flex; flex-direction: column; gap: 0.8rem; }
 
+/* ── Namenseingabe ── */
+#name-screen {
+  position: fixed; inset: 0; background: var(--bg);
+  display: none;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 1rem; z-index: 200;
+  height: 100dvh; overflow: hidden;
+  background-image: radial-gradient(ellipse at 20% 10%, #3d0d6b44 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #0d3d6b44 0%, transparent 60%);
+}
+#name-screen .start-box { width: min(100%, 420px); }
+.name-field-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+.name-label { color: var(--text-muted); font-size: 0.9rem; text-align: left; }
+.name-input {
+  padding: 0.7rem 0.9rem; border-radius: var(--radius);
+  border: 2px solid var(--accent2); background: var(--card-bg);
+  color: var(--text); font-size: 1rem; font-family: inherit;
+}
+.name-input:focus { outline: none; border-color: var(--accent1); }
+
 #rules-screen { width: min(100%, 430px); }
 .rules-box {
   text-align: center; padding: 1.25rem 1.5rem;

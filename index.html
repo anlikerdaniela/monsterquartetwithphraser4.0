@@ -71,6 +71,29 @@
     </div>
   </div>
 
+  <!-- Namenseingabe -->
+  <div id="name-screen" class="name-screen">
+    <div class="start-box">
+      <div class="start-monster">🐙</div>
+      <h1 class="start-title">Who's playing?</h1>
+      <form onsubmit="event.preventDefault(); confirmNames();">
+        <div id="name-fields-single" class="name-field-group">
+          <label class="name-label" for="input-name-you">Your name</label>
+          <input id="input-name-you" class="name-input" type="text" maxlength="16" placeholder="You" autocomplete="off">
+        </div>
+        <div id="name-fields-pvp" class="name-field-group">
+          <label class="name-label" for="input-name-p1">Player 1 name</label>
+          <input id="input-name-p1" class="name-input" type="text" maxlength="16" placeholder="Player 1" autocomplete="off">
+          <label class="name-label" for="input-name-p2">Player 2 name</label>
+          <input id="input-name-p2" class="name-input" type="text" maxlength="16" placeholder="Player 2" autocomplete="off">
+        </div>
+        <div class="start-buttons">
+          <button type="submit" class="btn btn--primary">Start game ➜</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Header -->
   <header>
     <div class="player-profile">
