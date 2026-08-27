@@ -598,6 +598,8 @@ header p {
 .btn-snake:hover { transform: translateY(-2px); background: rgba(184,159,216,0.15); }
 .btn-snake-icon { filter: grayscale(1); }
 
+.start-wallet { display: flex; justify-content: center; margin-top: 0.6rem; }
+
 /* ── Namenseingabe ── */
 #name-screen {
   position: fixed; inset: 0; background: var(--bg);

@@ -95,10 +95,14 @@ async function loadMonsters() {
   setMusicVolume(document.getElementById("music-volume").value);
 }
 
-// Testmodus-Extras: Spielgeld sofort anzeigen und Debug-Panel einblenden.
+// Aktualisiert jede Geldanzeige auf der Seite (Header + Startbildschirm).
+function updateWallet() {
+  document.querySelectorAll(".wallet-amount").forEach(el => { el.textContent = `$${totalMoney}`; });
+}
+
+// Testmodus-Extras: Debug-Panel einblenden.
 function initTestMode() {
   if (!TEST_MODE) return;
-  document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
   const panel = document.getElementById("debug-panel");
   if (panel) panel.style.display = "flex";
   console.info(`Test mode: ${TEST_CARD_COUNT} cards, $${totalMoney} starting money.`);
@@ -531,7 +535,7 @@ function endGame() {
     const isWin = computerLives <= 0;
     if (isWin) {
       totalMoney += 100;
-      document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+      updateWallet();
       document.getElementById("end-title").textContent = playerName === "You" ? "🏆 You won!" : `🏆 ${playerName} won!`;
       document.getElementById("end-sub").textContent = `+$100 added! Total: $${totalMoney}`;
       playEndSound("audio/yipe.mp3");
@@ -574,7 +578,7 @@ function avatarAction(imageName) {
     }
     totalMoney -= price;
     ownedAvatars.add(imageName);
-    document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+    updateWallet();
   }
 
   selectAvatar(imageName);
@@ -608,7 +612,7 @@ function buyLife() {
   totalMoney -= LIFE_PRICE;
   lives++;
   updateLives();
-  document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+  updateWallet();
   status.textContent = "❤️ Life purchased!";
 }
 
@@ -829,7 +833,7 @@ function endSnakeGame() {
 
   if (snakeScore > 0) {
     totalMoney += snakeScore;
-    document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+    updateWallet();
   }
 
   if (gameMode !== 'pvp') scheduleSnakeSurprise();
@@ -839,7 +843,7 @@ function endSnakeGame() {
 
 function debugAddMoney(amount) {
   totalMoney += amount;
-  document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+  updateWallet();
 }
 
 function debugLoseLife() {
@@ -868,5 +872,6 @@ function debugShowLifeLostOverlay() {
 window.addEventListener("DOMContentLoaded", () => {
   loadMonsters();
   updateAvatarOptions();
+  updateWallet();
   initTestMode();
 });
