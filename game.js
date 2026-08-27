@@ -114,6 +114,7 @@ function startGame() {
       `Choose your strongest ability and defeat the computer! (Level ${aiLevel})`;
   }
 
+  scheduleSnakeSurprise();
   nextRound();
 }
 
@@ -486,6 +487,8 @@ function stopGameMusic() {
 
 function endGame() {
   stopGameMusic();
+  if (snakeMoveInterval) endSnakeGame(); // schliesst das Popup und plant (kurz) neu
+  stopSnakeSurprises(); // ...das wird hier sofort wieder verworfen
   const overlay = document.getElementById("end-overlay");
   if (gameMode === 'pvp') {
     const p1wins = computerDeck.length === 0;
@@ -579,6 +582,171 @@ function toggleMusic(enabled) {
 function setMusicVolume(value) {
   const audio = document.getElementById("game-music");
   if (audio) audio.volume = Number(value) / 100;
+}
+
+// ── Snake Bonus-Minispiel ───────────────────────────────────
+// Taucht während einer laufenden Partie zufällig für ein paar Sekunden auf.
+
+const SNAKE_GRID = 12;
+const SNAKE_CELL = 20; // Canvas 240x240 / 12 Felder
+const SNAKE_DURATION_MS = 10000;
+const SNAKE_TICK_MS = 160;
+const SNAKE_KEY_DIRS = {
+  ArrowUp: { x: 0, y: -1 }, w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
+  ArrowDown: { x: 0, y: 1 }, s: { x: 0, y: 1 }, S: { x: 0, y: 1 },
+  ArrowLeft: { x: -1, y: 0 }, a: { x: -1, y: 0 }, A: { x: -1, y: 0 },
+  ArrowRight: { x: 1, y: 0 }, d: { x: 1, y: 0 }, D: { x: 1, y: 0 }
+};
+
+let snakeSurpriseTimeout = null;
+let snakeMoveInterval = null;
+let snakeCountdownInterval = null;
+let snakeEndTimeout = null;
+let snakeBody = [];
+let snakeDir = { x: 1, y: 0 };
+let snakeNextDir = { x: 1, y: 0 };
+let snakeFood = { x: 0, y: 0 };
+let snakeScore = 0;
+let snakeKeyHandler = null;
+
+function scheduleSnakeSurprise() {
+  clearTimeout(snakeSurpriseTimeout);
+  const delay = 20000 + Math.random() * 25000; // nach 20–45s
+  snakeSurpriseTimeout = setTimeout(trySnakeSurprise, delay);
+}
+
+function stopSnakeSurprises() {
+  clearTimeout(snakeSurpriseTimeout);
+  snakeSurpriseTimeout = null;
+}
+
+// Zeigt das Popup nur, wenn gerade wirklich eine Partie läuft (nicht auf
+// Start-/Namens-/End-/Settings-Screens) — sonst einfach kurz später erneut versuchen.
+function trySnakeSurprise() {
+  const isPlaying =
+    document.getElementById("start-screen").style.display === "none" &&
+    document.getElementById("name-screen").style.display !== "flex" &&
+    document.getElementById("end-overlay").style.display !== "flex" &&
+    !document.getElementById("settings-overlay").classList.contains("open");
+
+  if (!isPlaying) {
+    snakeSurpriseTimeout = setTimeout(trySnakeSurprise, 5000);
+    return;
+  }
+  showSnakeGame();
+}
+
+function showSnakeGame() {
+  const overlay = document.getElementById("snake-overlay");
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden", "false");
+
+  resetSnakeBody();
+  snakeScore = 0;
+  document.getElementById("snake-score").textContent = "0";
+  placeSnakeFood();
+  drawSnake();
+
+  snakeKeyHandler = (e) => {
+    const next = SNAKE_KEY_DIRS[e.key];
+    if (!next) return;
+    e.preventDefault();
+    if (next.x === -snakeDir.x && next.y === -snakeDir.y) return; // kein direktes Umkehren
+    snakeNextDir = next;
+  };
+  window.addEventListener("keydown", snakeKeyHandler);
+
+  snakeMoveInterval = setInterval(stepSnake, SNAKE_TICK_MS);
+
+  let remaining = Math.round(SNAKE_DURATION_MS / 1000);
+  const timerEl = document.getElementById("snake-timer");
+  timerEl.textContent = `${remaining}s`;
+  snakeCountdownInterval = setInterval(() => {
+    remaining--;
+    timerEl.textContent = `${Math.max(remaining, 0)}s`;
+  }, 1000);
+
+  snakeEndTimeout = setTimeout(endSnakeGame, SNAKE_DURATION_MS);
+}
+
+function resetSnakeBody() {
+  const mid = Math.floor(SNAKE_GRID / 2);
+  snakeBody = [{ x: mid - 1, y: mid }, { x: mid - 2, y: mid }, { x: mid - 3, y: mid }];
+  snakeDir = { x: 1, y: 0 };
+  snakeNextDir = { x: 1, y: 0 };
+}
+
+function placeSnakeFood() {
+  let pos;
+  do {
+    pos = { x: Math.floor(Math.random() * SNAKE_GRID), y: Math.floor(Math.random() * SNAKE_GRID) };
+  } while (snakeBody.some(seg => seg.x === pos.x && seg.y === pos.y));
+  snakeFood = pos;
+}
+
+function stepSnake() {
+  snakeDir = snakeNextDir;
+  const head = {
+    x: (snakeBody[0].x + snakeDir.x + SNAKE_GRID) % SNAKE_GRID,
+    y: (snakeBody[0].y + snakeDir.y + SNAKE_GRID) % SNAKE_GRID
+  };
+
+  // Bei Selbstkollision startet die Schlange freundlich neu, statt die
+  // kurze Bonuszeit mit einem Game Over zu verschenken.
+  if (snakeBody.some(seg => seg.x === head.x && seg.y === head.y)) {
+    resetSnakeBody();
+    drawSnake();
+    return;
+  }
+
+  snakeBody.unshift(head);
+  if (head.x === snakeFood.x && head.y === snakeFood.y) {
+    snakeScore++;
+    document.getElementById("snake-score").textContent = String(snakeScore);
+    placeSnakeFood();
+  } else {
+    snakeBody.pop();
+  }
+
+  drawSnake();
+}
+
+function drawSnake() {
+  const canvas = document.getElementById("snake-canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#ff6eb4";
+  ctx.fillRect(snakeFood.x * SNAKE_CELL + 3, snakeFood.y * SNAKE_CELL + 3, SNAKE_CELL - 6, SNAKE_CELL - 6);
+
+  snakeBody.forEach((seg, i) => {
+    ctx.fillStyle = i === 0 ? "#34d399" : "#6ee7b7";
+    ctx.fillRect(seg.x * SNAKE_CELL + 1, seg.y * SNAKE_CELL + 1, SNAKE_CELL - 2, SNAKE_CELL - 2);
+  });
+}
+
+function endSnakeGame() {
+  clearInterval(snakeMoveInterval);
+  clearInterval(snakeCountdownInterval);
+  clearTimeout(snakeEndTimeout);
+  snakeMoveInterval = null;
+  snakeCountdownInterval = null;
+  snakeEndTimeout = null;
+  if (snakeKeyHandler) {
+    window.removeEventListener("keydown", snakeKeyHandler);
+    snakeKeyHandler = null;
+  }
+
+  const overlay = document.getElementById("snake-overlay");
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden", "true");
+
+  if (snakeScore > 0) {
+    totalMoney += snakeScore;
+    document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+  }
+
+  scheduleSnakeSurprise();
 }
 
 // ── Start ────────────────────────────────────────────────────

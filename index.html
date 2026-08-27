@@ -15,12 +15,7 @@
     <div class="start-box">
       <div class="start-monster">🐙</div>
       <h1 class="start-title">Sweet Monster Quartet</h1>
-      <p class="start-text"> Win all the opponents cards and save the sweet monsters from the monster hunters!
-      <br> 
-       <br> 
-        <br> 
-        
-      </p>
+      <p class="start-text">Win all the opponents cards and save the sweet monsters from the monster hunters!</p>
       <p class="start-sub">Choose your game mode </p>
       <div class="start-buttons">
         <button class="btn btn--primary" onclick="startMode('ai', 1)">
@@ -33,6 +28,7 @@
            Two Players
         </button>
       </div>
+      <button class="btn-snake" type="button" onclick="showSnakeGame()"><span class="btn-snake-icon">🐍</span> Play</button>
     </div>
     <div id="rules-screen">
 
@@ -216,6 +212,22 @@
         <span>Volume</span>
         <input id="music-volume" type="range" min="0" max="100" value="50" oninput="setMusicVolume(this.value)">
       </label>
+    </div>
+  </div>
+
+  <!-- Snake Bonus-Minispiel -->
+  <div id="snake-overlay" class="snake-overlay" aria-hidden="true">
+    <div class="snake-box">
+      <div class="snake-header">
+        <span>🐍 Bonus Snake!</span>
+        <span class="snake-header-right">
+          <span id="snake-timer">10s</span>
+          <button type="button" class="snake-close" onclick="endSnakeGame()" aria-label="Close">×</button>
+        </span>
+      </div>
+      <canvas id="snake-canvas" width="240" height="240"></canvas>
+      <p class="snake-hint">Arrow keys / WASD — grab the treats! 🍬</p>
+      <p class="snake-score">Score: <span id="snake-score">0</span></p>
     </div>
   </div>
 
