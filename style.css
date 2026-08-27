@@ -951,7 +951,6 @@ font-size: clamp(1rem, 2vmin, 1rem);
 #rules-screen { width: min(100%, 520px); }
 
 
-
 .rules-inside p {
   color: var(--text-muted);
   line-height: 1.5;
