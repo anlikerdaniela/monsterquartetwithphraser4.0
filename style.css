@@ -584,13 +584,13 @@ header p {
 .start-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
 .start-buttons .btn {
   font-size: 0.84rem;
-  padding: clamp(0.4rem, 1.1vmin, 0.7rem) clamp(1.2rem, 3.2vmin, 2.3rem);
+  padding: clamp(0.05rem, 1.1vmin, 0.7rem) clamp(1.2rem, 3.2vmin, 2.3rem);
 }
 .btn-snake {
   margin-top: 0.6rem;
   font-family: 'Fredoka One', cursive;
   font-size: 0.72rem;
-  padding: 0.3rem 0.9rem;
+  padding: 0.25rem 0.85rem;
   background: transparent; color: var(--text-muted);
   border: 2px solid var(--text-muted); border-radius: 99px;
   cursor: pointer; transition: transform 0.15s, background 0.15s;
