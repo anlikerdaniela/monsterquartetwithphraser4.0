@@ -666,6 +666,19 @@ let snakeScore = 0;
 let snakeTickMs = SNAKE_TICK_START_MS;
 let snakeKeyHandler = null;
 
+// Von Tastatur-Handler und den Pfeil-Buttons (Handy-Steuerung) gemeinsam
+// genutzt: verhindert das direkte Umkehren in die Gegenrichtung.
+function setSnakeDirection(next) {
+  if (!next) return;
+  if (next.x === -snakeDir.x && next.y === -snakeDir.y) return;
+  snakeNextDir = next;
+}
+
+// Für die Pfeil-Buttons im Snake-Popup (Handy-Steuerung ohne Tastatur).
+function snakePressDir(dir) {
+  setSnakeDirection(SNAKE_KEY_DIRS[{ up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" }[dir]]);
+}
+
 function scheduleSnakeSurprise() {
   clearTimeout(snakeSurpriseTimeout);
   const delay = 20000 + Math.random() * 25000; // nach 20–45s
@@ -712,8 +725,7 @@ function showSnakeGame(timed = true) {
     const next = SNAKE_KEY_DIRS[e.key];
     if (!next) return;
     e.preventDefault();
-    if (next.x === -snakeDir.x && next.y === -snakeDir.y) return; // kein direktes Umkehren
-    snakeNextDir = next;
+    setSnakeDirection(next);
   };
   window.addEventListener("keydown", snakeKeyHandler);
 
