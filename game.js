@@ -3,6 +3,15 @@
 // game.js
 // =====================
 
+// ── Testumgebung ─────────────────────────────────────────────
+// Mit "?test" in der URL: kleines Deck, viel Spielgeld, kürzere
+// Wartezeiten und ein Debug-Panel zum gezielten Auslösen von Screens.
+// Kartenanzahl per "&cards=3" einstellbar (Standard 4, Minimum 2).
+// Beispiel: index.html?test&cards=3
+const urlParams = new URLSearchParams(location.search);
+const TEST_MODE = urlParams.has('test');
+const TEST_CARD_COUNT = Math.max(2, parseInt(urlParams.get('cards'), 10) || 4);
+
 let allMonsters = [];
 let playerDeck = [];
 let computerDeck = [];
@@ -17,11 +26,11 @@ let computerLives = 1;
 let winStreakSide = null; // 'player' | 'computer' — wer gerade in Folge gewinnt
 let winStreakCount = 0;
 const WIN_STREAK_LIMIT = 3; // ab so vielen Siegen in Folge bekommt die Seite gezielt eine schlechtere Karte
-let totalMoney = 0;
+let totalMoney = TEST_MODE ? 999 : 0;
 let gameMode = 'ai';
 let aiLevel = 1; // 1 = Spieler gewinnt tendenziell öfter, 2 = ca. 50/50
 let totalRounds = 0; // Züge in der aktuellen Partie (AI-Modus), für das Rundenlimit
-const MAX_ROUNDS_PER_GAME = 20; // spätestens nach so vielen Zügen ist die Partie vorbei
+const MAX_ROUNDS_PER_GAME = TEST_MODE ? 4 : 20; // spätestens nach so vielen Zügen ist die Partie vorbei
 let musicEnabled = false;
 let playerName = "You";
 let player1Name = "Player 1";
@@ -82,7 +91,17 @@ function confirmNames() {
 async function loadMonsters() {
   const res = await fetch("monsters.json");
   allMonsters = await res.json();
+  if (TEST_MODE) allMonsters = allMonsters.slice(0, TEST_CARD_COUNT);
   setMusicVolume(document.getElementById("music-volume").value);
+}
+
+// Testmodus-Extras: Spielgeld sofort anzeigen und Debug-Panel einblenden.
+function initTestMode() {
+  if (!TEST_MODE) return;
+  document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+  const panel = document.getElementById("debug-panel");
+  if (panel) panel.style.display = "flex";
+  console.info(`Test mode: ${TEST_CARD_COUNT} cards, $${totalMoney} starting money.`);
 }
 
 function startGame() {
@@ -157,7 +176,7 @@ function nextRound() {
     } else {
       renderHidden("computer-card", "Computer is choosing...", true);
       setMessage("");
-      setTimeout(computerChoose, 1500);
+      setTimeout(computerChoose, TEST_MODE ? 300 : 1500);
     }
   }
 }
@@ -259,8 +278,8 @@ function computerChoose() {
 
 // ── Spiellogik ───────────────────────────────────────────────
 
-const ROUND_PAUSE_MS = 700; // Zeit zum Vergleichen, bevor die Verliererkarte wegfliegt
-const FLY_DURATION_MS = 550; // Dauer der Flug-Animation zum gegnerischen Stapel
+const ROUND_PAUSE_MS = TEST_MODE ? 150 : 700; // Zeit zum Vergleichen, bevor die Verliererkarte wegfliegt
+const FLY_DURATION_MS = TEST_MODE ? 150 : 550; // Dauer der Flug-Animation zum gegnerischen Stapel
 
 function chooseEigenschaft(key) {
   if (!roundActive) return;
@@ -792,9 +811,38 @@ function endSnakeGame() {
   if (gameMode !== 'pvp') scheduleSnakeSurprise();
 }
 
+// ── Debug-Panel (nur im Testmodus) ──────────────────────────
+
+function debugAddMoney(amount) {
+  totalMoney += amount;
+  document.getElementById("wallet-amount").textContent = `$${totalMoney}`;
+}
+
+function debugLoseLife() {
+  if (lives <= 0) return;
+  lives--;
+  updateLives();
+  if (lives <= 0) setTimeout(endGame, 300);
+}
+
+function debugForceWin() {
+  if (gameMode === 'pvp') computerDeck = []; else computerLives = 0;
+  endGame();
+}
+
+function debugForceLose() {
+  if (gameMode === 'pvp') playerDeck = []; else lives = 0;
+  endGame();
+}
+
+function debugShowLifeLostOverlay() {
+  showLifeLostOverlay("💔 Life lost! (test)");
+}
+
 // ── Start ────────────────────────────────────────────────────
 
 window.addEventListener("DOMContentLoaded", () => {
   loadMonsters();
   updateAvatarOptions();
+  initTestMode();
 });

@@ -223,6 +223,18 @@
   <audio id="game-music" src="audio/happy-treefriends.mp3" loop preload="auto"></audio>
 
   <script src="game.js?v=2"></script>
+
+  <!-- Test-Panel: nur sichtbar mit ?test in der URL, siehe game.js -->
+  <div id="debug-panel" class="debug-panel">
+    <strong>🧪 Test Mode</strong>
+    <button type="button" onclick="debugAddMoney(500)">+$500</button>
+    <button type="button" onclick="debugLoseLife()">Lose a life</button>
+    <button type="button" onclick="debugForceWin()">Force game win</button>
+    <button type="button" onclick="debugForceLose()">Force game lose</button>
+    <button type="button" onclick="debugShowLifeLostOverlay()">Preview life-lost overlay</button>
+    <button type="button" onclick="showSnakeGame(true)">Trigger snake bonus</button>
+  </div>
+
   <div class="bubbles">
     <div class="bubble"></div>
     <div class="bubble"></div>
