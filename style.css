@@ -452,9 +452,9 @@ header p {
 .snake-hint { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem; }
 .snake-score { font-family: 'Fredoka One', cursive; color: var(--accent1); margin-top: 0.2rem; }
 
-/* Steuerkreuz für Handys ohne Tastatur — nur im Mobil-Layout sichtbar. */
+/* Steuerkreuz — Klick-/Touch-Alternative zu den Pfeiltasten/WASD. */
 .snake-dpad {
-  display: none;
+  display: grid;
   grid-template-columns: repeat(3, 44px);
   grid-template-rows: repeat(3, 44px);
   gap: 0.3rem;
@@ -472,9 +472,6 @@ header p {
 .snake-dpad .dpad-left { grid-column: 1; grid-row: 2; }
 .snake-dpad .dpad-right { grid-column: 3; grid-row: 2; }
 .snake-dpad .dpad-down { grid-column: 2; grid-row: 3; }
-@media (max-width: 560px) {
-  .snake-dpad { display: grid; }
-}
 
 /* ── Settings ── */
 .settings-overlay {
